@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div height="7%">
+  <center>
+    <b>{{ name }} version {{ version }}.</b>
+  </center>
+</div>
+
+{% autoescape off %}
+{{ gui_docs }}
+{% endautoescape %}
+
+{% endblock %}
