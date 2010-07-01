@@ -4,15 +4,15 @@
 
 <p>Detail for search done on {{ search.path }} at {{ search.start_time }}:</p>
 
-{% if not search.searchitem_set.length %}
-<p>No keywords defined at the time were found.</p>
-{% else %}
+{% if search.searchitem_set.all %}
 <ul>
 {% for item in search.searchitem_set.all %}
   <li>{{ item.file_path }}, line {{ item.line_number }}: 
       {{ item.keyword_found.keyword }}</li>
 {% endfor %}
 </ul>
+{% else %}
+<p>No keywords defined at the time were found.</p>
 {% endif %}
 
 {% endblock %}

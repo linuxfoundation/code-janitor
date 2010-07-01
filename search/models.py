@@ -1,4 +1,5 @@
 import os
+import codecs
 from django.db import models, transaction
 
 class Keyword(models.Model):
@@ -18,10 +19,11 @@ class Search(models.Model):
             for f in files:
                 file_path = os.path.join(dir, f)
                 file_obj = open(file_path)
-                line_count = 0
+                line_count = 1
                 for line in file_obj:
+                    line_unicode = line.decode('utf-8', 'ignore')
                     for keyword in keywords:
-                        if line.find(keyword.keyword) >= 0:
+                        if line_unicode.find(keyword.keyword) != -1:
                             item = SearchItem(search=search,
                                               file_path=file_path,
                                               keyword_found=keyword,
