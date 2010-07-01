@@ -1,0 +1,50 @@
+Linux Foundation Code Janitor
+=============================
+
+Copyright 2010 Linux Foundation.  For the copyright license, see
+doc/License.
+
+What is the Code Janitor?
+-------------------------
+
+The Code Janitor is a utility for finding "objectionable" content in
+source code trees before releasing them to the public.  These can be
+things your developers wrote (like profanity, insults, confessions
+like "we stole this code from..."), or things that indicate code that
+might be inappropriate to use in the project (like copyright notices
+or license statements).
+
+Getting Started
+---------------
+
+This is a web-based application, using Django as its framework.  You
+will need Django 1.0 or later.  Django is provided in most recent
+Linux distributions, or you can get it from
+http://www.djangoproject.com/.
+
+Once you have Django working, you can start using it with the
+following commands:
+
+python manage.py syncdb
+python manage.py runserver
+
+You will be prompted for a username, email address, and password when
+running the "syncdb" step; this is for managing keywords.
+
+Then, point a Web browser to http://localhost:8000/.
+
+How to Use
+----------
+
+The project searches directory trees for files containing certain
+keywords.  In order to use it, you must first give the app a list of
+keywords to search for.  Click the "Home" tab (if you're not there
+already), and then the link to the admin interface.  Log in using the
+user you created above, and then add or remove keywords as needed.
+
+Once you have a set of keywords entered, use the "Scan" tab to enter a
+path to scan.  The application will scan the path, and eventually
+direct you to a page of results, including file paths and line
+numbers.
+
+All past scans can be called back from the "Results" tab.

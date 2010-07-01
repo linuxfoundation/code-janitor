@@ -6,7 +6,7 @@ import cgi
 # gets around using inline frames and the quasi-html plain text files
 
 doc = ''
-doc_root = '../../../'
+doc_root = '../../'
 files = ('AUTHORS', 'Changelog')
     
 def html_ize(root, files):
@@ -25,7 +25,7 @@ def html_ize(root, files):
 
 doc += html_ize(doc_root, files)
 
-doc_root = '../../../doc/'
+doc_root = '../../doc/'
 files = ('Contributing', 'License')
 
 doc += html_ize(doc_root, files)
