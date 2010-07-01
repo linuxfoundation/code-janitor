@@ -25,8 +25,9 @@ http://www.djangoproject.com/.
 Once you have Django working, you can start using it with the
 following commands:
 
-python manage.py syncdb
-python manage.py runserver
+  make
+  python manage.py syncdb
+  python manage.py runserver
 
 You will be prompted for a username, email address, and password when
 running the "syncdb" step; this is for managing keywords.
