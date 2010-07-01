@@ -4,7 +4,7 @@
 
 <ul>
 {% for search in searches %}
-  <li><a href="/search/results/{{ search.id }}">{{ search.start_time }}: {{ search.top_path }}</a></li>
+  <li><a href="{{ search.get_absolute_url }}">{{ search }}</a></li>
 {% endfor %}
 </ul>
 

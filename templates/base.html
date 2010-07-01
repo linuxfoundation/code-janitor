@@ -13,14 +13,15 @@
 
 </head>
 
-{% if tab_test %}<body onload="setdefaults();">{% else %}<body>{% endif %}
+<body>
 
 <div id="header">
   <img hspace="40" vspace="5" align="right" src="/site_media/images/janitor_logo_small.png" alt="The Linux Foundation Code Janitor" title="The Linux Foundation" />
   <ul>
-    <li {% if tab_scan %}id="current"{% endif %}><a href="/search/scan">Scan<br>&nbsp;</a></li>
-    <li {% if tab_results %}id="current"{% endif %}><a href="/search/results">Results<br>&nbsp;</a></li>
-    <li><a href="/search/documentation">Documentation<br>&nbsp;</a></li>
+    <li {% if tab_home %}id="current"{% endif %}><a href="/">Home<br />&nbsp;</a></li>
+    <li {% if tab_scan %}id="current"{% endif %}><a href="/search/scan">Scan<br />&nbsp;</a></li>
+    <li {% if tab_results %}id="current"{% endif %}><a href="/search/results">Results<br />&nbsp;</a></li>
+    <li><a href="/search/documentation">Documentation<br />&nbsp;</a></li>
   </ul>
 </div>
 

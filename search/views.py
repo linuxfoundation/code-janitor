@@ -22,17 +22,20 @@ def scan(request):
     else:
         form = SearchForm()
 
-    return render_to_response("search/scan.html", { "form": form })
+    return render_to_response("search/scan.html", { "form": form,
+                                                    "tab_scan": True })
 
 def results(request, result_id=-1):
     if result_id < 0:
         results = Search.objects.all()
         return render_to_response("search/result_list.html", 
-                                  { 'searches': results })
+                                  { 'searches': results,
+                                    'tab_results': True })
     else:
         result = Search.objects.get(id=result_id)
         return render_to_response("search/result_detail.html",
-                                  { 'search': result })
+                                  { 'search': result,
+                                    'tab_results': True })
 
 def documentation(request):
     # Read the standalone docs, and reformat for the gui

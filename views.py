@@ -4,4 +4,4 @@
 from django.shortcuts import render_to_response
 
 def toplevel(request):
-    return render_to_response("index.html")
+    return render_to_response("index.html", { "tab_home": True })

@@ -5,9 +5,19 @@ from django.db import models, transaction
 class Keyword(models.Model):
     keyword = models.CharField(max_length=80)
 
+    def __unicode__(self):
+        return self.keyword
+
 class Search(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     top_path = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return "%s: %s" % (str(self.start_time), self.top_path)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ("results_detail", [str(self.id)])
 
     @staticmethod
     @transaction.commit_on_success
