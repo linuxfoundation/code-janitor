@@ -1,15 +1,44 @@
-{% extends "base.html" %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-{% block content %}
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Code Janitor</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css">@import "/site_media/css/tabstyle.css";</style>
+  <style type="text/css">@import "/site_media/css/docstyle.css";</style>
 
-<div height="7%">
-  <center>
-    <b>{{ name }} version {{ version }}.</b>
-  </center>
+</head>
+
+<body>
+
+<div id="header">
+  <img hspace="40" vspace="5" align="right" src="/site_media/images/janitor_logo_small.png" alt="The Linux Foundation Code Janitor" title="The Linux Foundation" />
+  <ul>
+    <li><a href="/search/scan">Scan<br>&nbsp;</a></li>
+    <li><a href="/search/results">Results<br>&nbsp;</a></li>
+    <li id="current"><a href="/search/documentation">Documentation<br>&nbsp;</a></li>
+  </ul>
 </div>
 
+<div> 
+  <center> 
+    <b>{{ name }} {{ version }}</b> 
+  </center> 
+</div> 
+
+<div id="lside_e">
+  <ul>
+    <li>Sidebar Menu Items</li>
+  </ul>
+</div>
+
+<div id="main">
 {% autoescape off %}
 {{ gui_docs }}
 {% endautoescape %}
+</div>
+<div id="rmargin"></div>
 
-{% endblock %}
+</body>
+
+</html>
