@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<ul>
+{% for search in searches %}
+  <li><a href="/search/results/{{ search.id }}">{{ search.start_time }}: {{ search.top_path }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

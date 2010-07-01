@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="/search/scan/" method="post">
+{{ form.as_p }}
+<input type="submit" value="Start Scan" />
+</form>
+
+{% endblock %}

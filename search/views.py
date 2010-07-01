@@ -2,10 +2,38 @@ import os
 
 from django.conf import settings
 from django.shortcuts import render_to_response
+from django import forms
+from django.http import HttpResponseRedirect
 
 from janitor.site_settings import gui_name, gui_version
+from janitor.search.models import *
 
-# doc page
+# Form classes
+
+class SearchForm(forms.Form):
+    path = forms.CharField(max_length=100)
+
+def scan(request):
+    if request.method == "POST":
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search = Search.do(form.cleaned_data["path"])
+            return HttpResponseRedirect("/search/results/%d" % search.id)
+    else:
+        form = SearchForm()
+
+    return render_to_response("search/scan.html", { "form": form })
+
+def results(request, result_id=-1):
+    if result_id < 0:
+        results = Search.objects.all()
+        return render_to_response("search/result_list.html", 
+                                  { 'searches': results })
+    else:
+        result = Search.objects.get(id=result_id)
+        return render_to_response("search/result_detail.html",
+                                  { 'search': result })
+
 def documentation(request):
     # Read the standalone docs, and reformat for the gui
     docs = ''
@@ -43,3 +71,4 @@ def documentation(request):
                               {'name': gui_name, 
                                'version': gui_version, 
                                'gui_docs': docs })
+

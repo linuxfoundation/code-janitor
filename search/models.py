@@ -11,6 +11,7 @@ class Search(models.Model):
     @staticmethod
     @transaction.commit_on_success
     def do(top_path):
+        keywords = Keyword.objects.all()
         search = Search(top_path=top_path)
         search.save()
         for (dir, subdirs, files) in os.walk(top_path):
@@ -27,6 +28,8 @@ class Search(models.Model):
                                               line_number=line_count)
                             item.save()
                     line_count = line_count + 1
+
+        return search
 
 class SearchItem(models.Model):
     search = models.ForeignKey(Search)
