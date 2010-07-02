@@ -9,10 +9,9 @@ What is the Code Janitor?
 
 The Code Janitor is a utility for finding "objectionable" content in
 source code trees before releasing them to the public.  These can be
-things your developers wrote (like profanity, insults, confessions
-like "we stole this code from..."), or things that indicate code that
-might be inappropriate to use in the project (like copyright notices
-or license statements).
+things your developers wrote (like profanity, insults, confessions,
+and so on), or things that indicate code that might be inappropriate
+to use in the project (like copyright notices or license statements).
 
 Getting Started
 ---------------
