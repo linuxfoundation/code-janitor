@@ -25,11 +25,7 @@ Once you have Django working, you can start using it with the
 following commands:
 
   make
-  python manage.py syncdb
   python manage.py runserver
-
-You will be prompted for a username, email address, and password when
-running the "syncdb" step; this is for managing keywords.
 
 Then, point a Web browser to http://localhost:8000/.
 
