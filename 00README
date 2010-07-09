@@ -25,9 +25,10 @@ Once you have Django working, you can start using it with the
 following commands:
 
   make
-  python manage.py runserver
+  ./code-janitor.py start
 
-Then, point a Web browser to http://localhost:8000/.
+This will start the server and point a Web browser at the Code Janitor
+main page.
 
 How to Use
 ----------
