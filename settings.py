@@ -2,6 +2,18 @@
 
 import os
 
+# Function for finding the project root.
+
+def get_project_root():
+    project_root_paths = [ ".", "..", "/opt/linuxfoundation" ]
+    for path in project_root_paths:
+        if os.path.exists(os.path.join(path, "code-janitor.py")) or \
+                os.path.exists(os.path.join(path, "bin/code-janitor.py")):
+            return path
+
+    # Shouldn't get here unless we can't find the path.
+    raise RuntimeError, "could not find the project path"
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -39,6 +51,9 @@ SITE_ID = 1
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
+
+# Project root.
+PROJECT_ROOT = get_project_root()
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"

@@ -2,9 +2,44 @@
 
 {% block content %}
 
+<div id="job_status">
+</div>
+
+<div id="scan_form">
 <form action="/search/scan/" method="post">
 {{ form.as_p }}
 <input type="submit" value="Start Scan" />
 </form>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript">
+
+function setdefaults()
+{
+  document.getElementById("scan_form").style.visibility = 'hidden';
+  document.getElementById("job_status").innerHTML = "Getting job status...";
+  setTimeout("reload_status();", 500);
+}
+
+function reload_status()
+{
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.open("GET", "/search/taskstatus/", false);
+  xmlhttp.send();
+  if (xmlhttp.responseText == "None") {
+    document.getElementById("scan_form").style.visibility = 'visible';
+    document.getElementById("job_status").innerHTML = "";
+  } else {
+    document.getElementById("scan_form").style.visibility = 'hidden';
+    document.getElementById("job_status").innerHTML = xmlhttp.responseText;
+    setTimeout("reload_status();", 1000);
+  }
+}
+
+</script>
 
 {% endblock %}

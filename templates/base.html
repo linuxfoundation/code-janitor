@@ -6,14 +6,17 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style type="text/css">@import "/site_media/css/tabstyle.css";</style>
 
-<!-- sets up the divs to control the styling of the main page body -->
-<style type="text/css">@import "/site_media/css/bodystyle.css";</style>
+  <!-- sets up the divs to control the styling of the main page body -->
+  <style type="text/css">@import "/site_media/css/bodystyle.css";</style>
+
+  <!-- sets up the styles for the progress bar -->
+  <style type="text/css">@import "/site_media/css/barstyle.css";</style>
 
 {% block header %} {% endblock %}
 
 </head>
 
-<body>
+<body onload="setdefaults();">
 
 <div id="header">
   <img hspace="40" vspace="5" align="right" height="59" width="228" src="/site_media/images/lfc_code_janitor.jpg" alt="The Linux Foundation Code Janitor" title="The Linux Foundation" />
@@ -33,6 +36,14 @@
 
 </body>
 
-{% block scripts %} {% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+
+function setdefaults()
+{
+}
+
+</script>
+{% endblock %}
 
 </html>

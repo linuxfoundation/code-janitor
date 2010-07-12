@@ -3,15 +3,20 @@ import os
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django import forms
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 
 from janitor.site_settings import gui_name, gui_version
 from janitor.search.models import *
+from janitor.util import task
 
 # Form classes
 
 class SearchForm(forms.Form):
     path = forms.CharField(max_length=100)
+
+def taskstatus(request):
+    tm = task.TaskManager()
+    return HttpResponse(tm.read_status())
 
 def scan(request):
     if request.method == "POST":
