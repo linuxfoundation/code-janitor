@@ -7,8 +7,9 @@
   <script type="text/javascript" src="/site_media/js/jqueryFileTree.js"></script>
   <script type="text/javascript" src="/site_media/js/visibility.js"></script>
 {% endblock %}
-{% block content %}
 
+{% block content %}
+<div id="title"><p>Welcome to the Linux Foundation Code Janitor!</p></div>
 <form name="scanform" action="/search/scan/" method="post" enctype="multipart/form-data">
 <div class="container" id="entry_form">
 <table align="left">
@@ -27,6 +28,14 @@
 	<div id="path" class="browser"></div> 
 </div>
 </form>
+
+<div class="cfooter">
+
+<hr>
+<b>Subscribe to the <a href="https://lists.linux-foundation.org/mailman/listinfo/janitor-dev">mailing list</a></b><br>
+<b>Get latest version from <a href="http://git.linuxfoundation.org/?p=janitor.git;a=summary">git</a></b><br>
+<b>Report bugs and request features at <a href="http://bugs.linuxfoundation.org/enter_bug.cgi?product=Compliance">bugzilla</a></b><br>
+</div>
 
 {% endblock %}
 
