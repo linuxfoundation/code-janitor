@@ -1,10 +1,60 @@
 {% extends "base.html" %}
-
+{% block header %}
+  <!-- for the file browser -->
+  <style type="text/css" media="screen">@import "/site_media/css/jqueryFileTree.css";</style>
+  <style type="text/css">@import "/site_media/css/containers.css";</style>
+  <script type="text/javascript" src="/site_media/js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="/site_media/js/jqueryFileTree.js"></script>
+{% endblock %}
 {% block content %}
 
-<form action="/search/scan/" method="post">
-{{ form.as_p }}
-<input type="submit" value="Start Scan" />
+<form name="scanform" action="/search/scan/" method="post" enctype="multipart/form-data">
+<div class="container" id="entry_form">
+<table align="left">
+  <tr align="left">
+    <th align="right">{{ form.path.label }}:</th>
+    <td>{{ form.path }}</td>
+    <td><input type="button" value="Select Path" onclick="toggle_visibility('path_select')"/><td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><input type="submit" value="Start Scan" /></td>
+  </tr>
+</table>
+</div>
+<div class="container" id="path_select" style="display: none;"> 
+	<div id="path" class="browser"></div> 
+</div>
 </form>
 
 {% endblock %}
+
+{% block scripts %}
+<script language="JavaScript">
+    $(document).ready( function() {
+        $('#path').fileTree({
+            root: '/',
+            script: '/search/dirlist/',
+            loadMessage: 'waiting to load'
+            }, function(file) {
+                filenametoentry(file);
+        });
+    });
+    function filenametoentry(filename) {
+        lastchar = filename.slice(-1);
+        if (lastchar == '/')
+          filename = filename.slice(0, -1);
+        // here we accept a file or dir
+        document.scanform.path.value = filename;
+    }
+    function toggle_visibility(id) {
+        var e = document.getElementById(id);
+        if (e.style.display == 'block')
+            e.style.display = 'none';
+        else
+            e.style.display = 'block';
+    }
+</script>
+
+{% endblock %}
+
