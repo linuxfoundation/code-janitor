@@ -1,4 +1,4 @@
-import os
+import os, re, urllib
 
 from django.conf import settings
 from django.shortcuts import render_to_response
@@ -12,6 +12,9 @@ from janitor.search.models import *
 
 class SearchForm(forms.Form):
     path = forms.CharField(max_length=100)
+
+class KeywordForm(forms.Form):
+    wordlist = forms.CharField(widget=forms.Textarea)
 
 def scan(request):
     if request.method == "POST":
@@ -36,6 +39,46 @@ def results(request, result_id=-1):
         return render_to_response("search/result_detail.html",
                                   { 'search': result,
                                     'tab_results': True })
+
+def keywords(request):
+    errmsg = ''
+    errlist = []
+    if request.method == "POST":
+        mode = urllib.unquote(request.POST.get('submit'))
+
+        if re.search("^Add", mode):   
+            form = KeywordForm(request.POST) # A form bound to the POST data
+            # request to add data
+            if form.is_valid(): # All validation rules pass
+                wl = form.cleaned_data['wordlist']
+                words = wl.split("\n")
+                # remove dups
+                words = list(set(words))
+                print words
+                for word in words:
+                    word = word.rstrip("\r")
+                    kw = Keyword(keyword = word)
+                    try:
+                        kw.save()
+                    except:
+                        errlist.append(str(word))
+                
+                if errlist:
+                    errmsg = "<b>Warning:</b> did not add duplicate keyword(s): " + str(errlist)
+                    
+        if re.search("^Delete", mode): 
+            # delete request
+            keywordlist = request.POST.get('keywordlist', '')
+            if keywordlist != '':
+                delete_records(Keyword, keywordlist)
+
+    form = KeywordForm()
+    latest_keyword_list = Keyword.objects.all().order_by('keyword')
+
+    return render_to_response("search/keywords.html", { "form": form,
+                                                    "errmsg": errmsg,
+                                                    "latest_keyword_list": latest_keyword_list,
+                                                    "tab_keywords": True })
 
 def documentation(request):
     # Read the standalone docs, and reformat for the gui
@@ -74,4 +117,16 @@ def documentation(request):
                               {'name': gui_name, 
                                'version': gui_version, 
                                'gui_docs': docs })
+
+## utility functions
+
+# delete table records requested by id from one of the input forms
+def delete_records(table, rlist):
+            
+    records = rlist.split(",")
+
+    for record in records:
+        if record != '':
+            q = table.objects.filter(id = record)
+            q.delete()
 

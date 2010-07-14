@@ -3,7 +3,7 @@ import codecs
 from django.db import models, transaction
 
 class Keyword(models.Model):
-    keyword = models.CharField(max_length=80)
+    keyword = models.CharField(max_length=80, unique=True)
 
     def __unicode__(self):
         return self.keyword

@@ -12,11 +12,12 @@
 <body>
 
 <div id="header">
-  <img hspace="40" vspace="5" align="right" src="/site_media/images/janitor_logo_small.png" alt="The Linux Foundation Code Janitor" title="The Linux Foundation" />
+  <img hspace="40" vspace="5" align="right" height="59" width="228" src="/site_media/images/lfc_code_janitor.jpg" alt="The Linux Foundation Code Janitor" title="The Linux Foundation" /> 
   <ul>
     <li><a href="/">Home<br>&nbsp;</a></li>
     <li><a href="/search/scan">Scan<br>&nbsp;</a></li>
     <li><a href="/search/results">Results<br>&nbsp;</a></li>
+    <li><a href="/search/keywords">Keywords<br>&nbsp;</a></li>
     <li id="current"><a href="/search/documentation">Documentation<br>&nbsp;</a></li>
   </ul>
 </div>
@@ -27,19 +28,7 @@
   </center> 
 </div> 
 
-<div id="lside_e">
-  <ul>
-    <li>Sidebar Menu Items</li>
-  </ul>
-</div>
-
-<div id="main">
 {% autoescape off %}
 {{ gui_docs }}
 {% endautoescape %}
-</div>
-<div id="rmargin"></div>
 
-</body>
-
-</html>
