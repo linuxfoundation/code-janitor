@@ -1,10 +1,29 @@
 .container {
     float: left;
-    margin: 15px;
+    margin: 5px;
+    padding: 5px;
 }
 			
+.cfooter {
+    clear: both;
+    margin: 20px;
+    padding: 5px;
+}
+
 .browser {
-    width: 250px;
+    width: 220px;
+    height: 300px;
+    border-top: solid 1px #BBB;
+    border-left: solid 1px #BBB;
+    border-bottom: solid 1px #FFF;
+    border-right: solid 1px #FFF;
+    background: #FFF;
+    overflow: scroll;
+    padding: 5px;
+}			
+
+.executor {
+    width: 600px;
     height: 300px;
     border-top: solid 1px #BBB;
     border-left: solid 1px #BBB;
