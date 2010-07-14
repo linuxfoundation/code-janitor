@@ -57,11 +57,13 @@ def keywords(request):
                 print words
                 for word in words:
                     word = word.rstrip("\r")
-                    kw = Keyword(keyword = word)
-                    try:
-                        kw.save()
-                    except:
-                        errlist.append(str(word))
+                    # no empty strings
+                    if word:
+                        kw = Keyword(keyword = word)
+                        try:
+                            kw.save()
+                        except:
+                            errlist.append(str(word))
                 
                 if errlist:
                     errmsg = "<b>Warning:</b> did not add duplicate keyword(s): " + str(errlist)

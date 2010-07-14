@@ -5,6 +5,7 @@
   <style type="text/css">@import "/site_media/css/containers.css";</style>
   <script type="text/javascript" src="/site_media/js/jquery-1.4.2.min.js"></script>
   <script type="text/javascript" src="/site_media/js/jqueryFileTree.js"></script>
+  <script type="text/javascript" src="/site_media/js/visibility.js"></script>
 {% endblock %}
 {% block content %}
 
@@ -46,13 +47,6 @@
           filename = filename.slice(0, -1);
         // here we accept a file or dir
         document.scanform.path.value = filename;
-    }
-    function toggle_visibility(id) {
-        var e = document.getElementById(id);
-        if (e.style.display == 'block')
-            e.style.display = 'none';
-        else
-            e.style.display = 'block';
     }
 </script>
 
