@@ -25,7 +25,14 @@ class Search(models.Model):
         keywords = Keyword.objects.all()
         search = Search(top_path=top_path)
         search.save()
-        for (dir, subdirs, files) in os.walk(top_path):
+
+        if os.path.isdir(top_path):
+            path_iterator = os.walk(top_path)
+        else:
+            path_iterator = [(os.path.dirname(top_path), [], 
+                              [os.path.basename(top_path)])]
+
+        for (dir, subdirs, files) in path_iterator:
             for f in files:
                 file_path = os.path.join(dir, f)
                 file_obj = open(file_path)
