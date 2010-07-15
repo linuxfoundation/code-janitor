@@ -43,8 +43,12 @@ def results(request, result_id=-1):
                                     'tab_results': True })
     else:
         result = Search.objects.get(id=result_id)
+        searched = result.searchitem_set.filter(skipped=False)
+        not_searched = result.searchitem_set.filter(skipped=True)
         return render_to_response("search/result_detail.html",
                                   { 'search': result,
+                                    'searched': searched,
+                                    'not_searched': not_searched,
                                     'tab_results': True })
 
 def keywords(request):

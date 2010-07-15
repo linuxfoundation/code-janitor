@@ -35,23 +35,29 @@ class Search(models.Model):
         for (dir, subdirs, files) in path_iterator:
             for f in files:
                 file_path = os.path.join(dir, f)
-                file_obj = open(file_path)
-                line_count = 1
-                for line in file_obj:
-                    line_unicode = line.decode('utf-8', 'ignore')
-                    for keyword in keywords:
-                        if line_unicode.find(keyword.keyword) != -1:
-                            item = SearchItem(search=search,
-                                              file_path=file_path,
-                                              keyword_found=keyword,
-                                              line_number=line_count)
-                            item.save()
-                    line_count = line_count + 1
+                try:
+                    file_obj = open(file_path)
+                    line_count = 1
+                    for line in file_obj:
+                        line_unicode = line.decode('utf-8', 'ignore')
+                        for keyword in keywords:
+                            if line_unicode.find(keyword.keyword) != -1:
+                                item = SearchItem(search=search,
+                                                  file_path=file_path,
+                                                  keyword_found=keyword.keyword,
+                                                  line_number=line_count)
+                                item.save()
+                        line_count = line_count + 1
+                except IOError:
+                    item = SearchItem(search=search, file_path=file_path,
+                                      skipped=True)
+                    item.save()
 
         return search
 
 class SearchItem(models.Model):
     search = models.ForeignKey(Search)
     file_path = models.CharField(max_length=100)
-    keyword_found = models.ForeignKey(Keyword)
-    line_number = models.IntegerField()
+    skipped = models.BooleanField(default=False)
+    keyword_found = models.CharField(max_length=80)
+    line_number = models.IntegerField(default=0)
