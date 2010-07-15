@@ -2,6 +2,11 @@
 
 {% block content %}
 
+<div id="job_status">
+</div>
+
+<div id="result_page">
+
 <p>Detail for search done on {{ search.path }} at {{ search.start_time }}:</p>
 
 {% if search.searchitem_set.all %}
@@ -14,5 +19,51 @@
 {% else %}
 <p>No keywords defined at the time were found.</p>
 {% endif %}
+
+{% if not search.completed %}
+<p>This job did not complete for some reason.  Any results listed above
+may be suspect.</p>
+{% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript">
+
+function setdefaults()
+{
+{% if search.completed %}
+  document.getElementById("result_page").style.visibility = 'visible';
+  document.getElementById("job_status").innerHTML = "";
+{% else %}
+  document.getElementById("result_page").style.visibility = 'hidden';
+  document.getElementById("job_status").innerHTML = "Getting job status...";
+  setTimeout("reload_status();", 5000);
+{% endif %}
+}
+
+function reload_status()
+{
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.open("GET", "/search/taskstatus/", false);
+  xmlhttp.send();
+  if (xmlhttp.responseText == "None") {
+{% if search.completed %}
+    location.reload();
+{% else %}
+    document.getElementById("result_page").style.visibility = 'visible';
+    document.getElementById("job_status").innerHTML = "";
+{% endif %}
+  } else {
+    document.getElementById("result_page").style.visibility = 'hidden';
+    document.getElementById("job_status").innerHTML = xmlhttp.responseText;
+    setTimeout("reload_status();", 1000);
+  }
+}
+
+</script>
 
 {% endblock %}

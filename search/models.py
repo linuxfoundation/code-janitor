@@ -11,6 +11,7 @@ class Keyword(models.Model):
 class Search(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     top_path = models.CharField(max_length=100)
+    completed = models.BooleanField(default=False)
 
     def __unicode__(self):
         return "%s: %s" % (str(self.start_time), self.top_path)
@@ -19,15 +20,20 @@ class Search(models.Model):
     def get_absolute_url(self):
         return ("results_detail", [str(self.id)])
 
-    @staticmethod
+    # This method actually does a search.  It's designed to be
+    # run as a task (see util/task.py).
+
     @transaction.commit_on_success
-    def do(top_path):
+    def do(self):
+        sys.stdout.write("JOBDESC: Scanning files for keywords.\n")
+        sys.stdout.write("MESSAGE: Loading keywords...\n")
+        sys.stdout.flush()
         keywords = Keyword.objects.all()
-        search = Search(top_path=top_path)
-        search.save()
-        for (dir, subdirs, files) in os.walk(top_path):
+        for (dir, subdirs, files) in os.walk(self.top_path):
             for f in files:
                 file_path = os.path.join(dir, f)
+                sys.stdout.write("ITEM: " + file_path + "\n")
+                sys.stdout.flush()
                 file_obj = open(file_path)
                 line_count = 1
                 for line in file_obj:
@@ -40,8 +46,8 @@ class Search(models.Model):
                                               line_number=line_count)
                             item.save()
                     line_count = line_count + 1
-
-        return search
+        self.completed = True
+        self.save()
 
 class SearchItem(models.Model):
     search = models.ForeignKey(Search)

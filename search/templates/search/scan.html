@@ -22,7 +22,7 @@ function setdefaults()
 {
   document.getElementById("scan_form").style.visibility = 'hidden';
   document.getElementById("job_status").innerHTML = "Getting job status...";
-  setTimeout("reload_status();", 500);
+  reload_status();
 }
 
 function reload_status()

@@ -38,6 +38,7 @@
 # that function returns.
 
 import os
+import traceback
 try:
     import cStringIO as StringIO
 except:
@@ -51,8 +52,7 @@ class TaskError(StandardError):
 
 class TaskManager:
     def __init__(self):
-        self._task_log_fn = os.path.join(settings.PROJECT_ROOT, 
-                                         "compliance/task.log")
+        self._task_log_fn = os.path.join(settings.PROJECT_ROOT, "task.log")
         self._task_log_file = None
 
     def _get_status_file(self):
@@ -89,6 +89,8 @@ class TaskManager:
 
                 try:
                     task_func()
+                except:
+                    sys.stderr.write(traceback.format_exc())
                 finally:
                     os.close(task_fd)
                     os.close(1)

@@ -20,9 +20,12 @@ def taskstatus(request):
 
 def scan(request):
     if request.method == "POST":
+        tm = task.TaskManager()
         form = SearchForm(request.POST)
-        if form.is_valid():
-            search = Search.do(form.cleaned_data["path"])
+        if form.is_valid() and not tm.is_running():
+            search = Search(top_path=form.cleaned_data["path"])
+            search.save()
+            tm.start(search.do)
             return HttpResponseRedirect("/search/results/%d" % search.id)
     else:
         form = SearchForm()
