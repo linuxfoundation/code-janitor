@@ -33,6 +33,14 @@
 </form>
 </div>
 
+<div class="cfooter">
+
+<hr>
+<b>Subscribe to the <a href="https://lists.linux-foundation.org/mailman/listinfo/janitor-dev">mailing list</a></b><br>
+<b>Get latest version from <a href="http://git.linuxfoundation.org/?p=janitor.git;a=summary">git</a></b><br>
+<b>Report bugs and request features at <a href="http://bugs.linuxfoundation.org/enter_bug.cgi?product=Compliance">bugzilla</a></b><br>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -63,17 +71,6 @@ function reload_status()
 
 </script>
 
-<div class="cfooter">
-
-<hr>
-<b>Subscribe to the <a href="https://lists.linux-foundation.org/mailman/listinfo/janitor-dev">mailing list</a></b><br>
-<b>Get latest version from <a href="http://git.linuxfoundation.org/?p=janitor.git;a=summary">git</a></b><br>
-<b>Report bugs and request features at <a href="http://bugs.linuxfoundation.org/enter_bug.cgi?product=Compliance">bugzilla</a></b><br>
-</div>
-
-{% endblock %}
-
-{% block scripts %}
 <script language="JavaScript">
     $(document).ready( function() {
         $('#path').fileTree({
