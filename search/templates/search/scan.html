@@ -9,7 +9,10 @@
 {% endblock %}
 
 {% block content %}
-<div id="title"><p>Welcome to the Code Janitor!</p></div>
+<div id="title">
+  <p>Welcome to the Code Janitor!</p>
+  {% if nokeywords %}{% autoescape off %}<p>{{ nokeywords }}</p>{% endautoescape %}{% endif %}
+</div>
 <form name="scanform" action="/search/scan/" method="post" enctype="multipart/form-data">
 <div class="container" id="entry_form">
 <table align="left">
