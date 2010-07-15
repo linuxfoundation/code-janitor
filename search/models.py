@@ -1,3 +1,4 @@
+import sys
 import os
 import codecs
 from django.db import models, transaction
@@ -30,11 +31,11 @@ class Search(models.Model):
         sys.stdout.flush()
         keywords = Keyword.objects.all()
 
-        if os.path.isdir(top_path):
-            path_iterator = os.walk(top_path)
+        if os.path.isdir(self.top_path):
+            path_iterator = os.walk(self.top_path)
         else:
-            path_iterator = [(os.path.dirname(top_path), [], 
-                              [os.path.basename(top_path)])]
+            path_iterator = [(os.path.dirname(self.top_path), [], 
+                              [os.path.basename(self.top_path)])]
 
         for (dir, subdirs, files) in path_iterator:
             for f in files:
@@ -48,14 +49,14 @@ class Search(models.Model):
                         line_unicode = line.decode('utf-8', 'ignore')
                         for keyword in keywords:
                             if line_unicode.find(keyword.keyword) != -1:
-                                item = SearchItem(search=search,
+                                item = SearchItem(search=self,
                                                   file_path=file_path,
                                                   keyword_found=keyword.keyword,
                                                   line_number=line_count)
                                 item.save()
                         line_count = line_count + 1
                 except IOError:
-                    item = SearchItem(search=search, file_path=file_path,
+                    item = SearchItem(search=self, file_path=file_path,
                                       skipped=True)
                     item.save()
 
