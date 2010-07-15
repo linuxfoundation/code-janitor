@@ -60,12 +60,7 @@ function reload_status()
   xmlhttp.open("GET", "/search/taskstatus/", false);
   xmlhttp.send();
   if (xmlhttp.responseText == "None") {
-{% if search.completed %}
     location.reload();
-{% else %}
-    document.getElementById("result_page").style.visibility = 'visible';
-    document.getElementById("job_status").innerHTML = "";
-{% endif %}
   } else {
     document.getElementById("result_page").style.visibility = 'hidden';
     document.getElementById("job_status").innerHTML = xmlhttp.responseText;
