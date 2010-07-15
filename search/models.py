@@ -3,7 +3,7 @@ import codecs
 from django.db import models, transaction
 
 class Keyword(models.Model):
-    keyword = models.CharField(max_length=80)
+    keyword = models.CharField(max_length=80, unique=True)
 
     def __unicode__(self):
         return self.keyword
@@ -29,28 +29,42 @@ class Search(models.Model):
         sys.stdout.write("MESSAGE: Loading keywords...\n")
         sys.stdout.flush()
         keywords = Keyword.objects.all()
-        for (dir, subdirs, files) in os.walk(self.top_path):
+
+        if os.path.isdir(top_path):
+            path_iterator = os.walk(top_path)
+        else:
+            path_iterator = [(os.path.dirname(top_path), [], 
+                              [os.path.basename(top_path)])]
+
+        for (dir, subdirs, files) in path_iterator:
             for f in files:
                 file_path = os.path.join(dir, f)
-                sys.stdout.write("ITEM: " + file_path + "\n")
-                sys.stdout.flush()
-                file_obj = open(file_path)
-                line_count = 1
-                for line in file_obj:
-                    line_unicode = line.decode('utf-8', 'ignore')
-                    for keyword in keywords:
-                        if line_unicode.find(keyword.keyword) != -1:
-                            item = SearchItem(search=search,
-                                              file_path=file_path,
-                                              keyword_found=keyword,
-                                              line_number=line_count)
-                            item.save()
-                    line_count = line_count + 1
+                try:
+                    sys.stdout.write("ITEM: " + file_path + "\n")
+                    sys.stdout.flush()
+                    file_obj = open(file_path)
+                    line_count = 1
+                    for line in file_obj:
+                        line_unicode = line.decode('utf-8', 'ignore')
+                        for keyword in keywords:
+                            if line_unicode.find(keyword.keyword) != -1:
+                                item = SearchItem(search=search,
+                                                  file_path=file_path,
+                                                  keyword_found=keyword.keyword,
+                                                  line_number=line_count)
+                                item.save()
+                        line_count = line_count + 1
+                except IOError:
+                    item = SearchItem(search=search, file_path=file_path,
+                                      skipped=True)
+                    item.save()
+
         self.completed = True
         self.save()
 
 class SearchItem(models.Model):
     search = models.ForeignKey(Search)
     file_path = models.CharField(max_length=100)
-    keyword_found = models.ForeignKey(Keyword)
-    line_number = models.IntegerField()
+    skipped = models.BooleanField(default=False)
+    keyword_found = models.CharField(max_length=80)
+    line_number = models.IntegerField(default=0)

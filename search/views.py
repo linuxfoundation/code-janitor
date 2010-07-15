@@ -1,4 +1,4 @@
-import os
+import os, re, urllib
 
 from django.conf import settings
 from django.shortcuts import render_to_response
@@ -14,11 +14,15 @@ from janitor.util import task
 class SearchForm(forms.Form):
     path = forms.CharField(max_length=100)
 
+class KeywordForm(forms.Form):
+    wordlist = forms.CharField(widget=forms.Textarea)
+
 def taskstatus(request):
     tm = task.TaskManager()
     return HttpResponse(tm.read_status())
 
 def scan(request):
+    nokeywords = ''
     if request.method == "POST":
         tm = task.TaskManager()
         form = SearchForm(request.POST)
@@ -30,7 +34,13 @@ def scan(request):
     else:
         form = SearchForm()
 
+    # issue a note is no keywords defined
+    keywordcount = Keyword.objects.count()
+    if keywordcount == 0:
+        nokeywords = 'You should define keywords first on the <a href="search/keywords">Keywords</a> tab.'
+
     return render_to_response("search/scan.html", { "form": form,
+                                                    "nokeywords": nokeywords,
                                                     "tab_scan": True })
 
 def results(request, result_id=-1):
@@ -41,9 +51,55 @@ def results(request, result_id=-1):
                                     'tab_results': True })
     else:
         result = Search.objects.get(id=result_id)
+        searched = result.searchitem_set.filter(skipped=False)
+        not_searched = result.searchitem_set.filter(skipped=True)
         return render_to_response("search/result_detail.html",
                                   { 'search': result,
+                                    'searched': searched,
+                                    'not_searched': not_searched,
                                     'tab_results': True })
+
+def keywords(request):
+    errmsg = ''
+    errlist = []
+    if request.method == "POST":
+        mode = urllib.unquote(request.POST.get('submit'))
+
+        if re.search("^Add", mode):   
+            form = KeywordForm(request.POST) # A form bound to the POST data
+            # request to add data
+            if form.is_valid(): # All validation rules pass
+                wl = form.cleaned_data['wordlist']
+                words = wl.split("\n")
+                # remove dups
+                words = list(set(words))
+                print words
+                for word in words:
+                    word = word.rstrip("\r")
+                    # no empty strings
+                    if word:
+                        kw = Keyword(keyword = word)
+                        try:
+                            kw.save()
+                        except:
+                            errlist.append(str(word))
+                
+                if errlist:
+                    errmsg = "<b>Warning:</b> did not add duplicate keyword(s): " + str(errlist)
+                    
+        if re.search("^Delete", mode): 
+            # delete request
+            keywordlist = request.POST.get('keywordlist', '')
+            if keywordlist != '':
+                delete_records(Keyword, keywordlist)
+
+    form = KeywordForm()
+    latest_keyword_list = Keyword.objects.all().order_by('keyword')
+
+    return render_to_response("search/keywords.html", { "form": form,
+                                                    "errmsg": errmsg,
+                                                    "latest_keyword_list": latest_keyword_list,
+                                                    "tab_keywords": True })
 
 def documentation(request):
     # Read the standalone docs, and reformat for the gui
@@ -82,4 +138,41 @@ def documentation(request):
                               {'name': gui_name, 
                                'version': gui_version, 
                                'gui_docs': docs })
+
+# this does not have a corresponding dirlist.html
+# this is dynamic filetree content fed to jqueryFileTree for the test.html file/dir selection
+# script for jqueryFileTree points to /linkage/dirlist/
+def dirlist(request):
+    # filter out some directories that aren't useful from "/"
+    not_wanted = [ '/proc', '/dev', '/sys', '/initrd' ]
+    r=['<ul class="jqueryFileTree" style="display: none;">']
+    try:
+        d=urllib.unquote(request.POST.get('dir'))
+        content = os.listdir(d)
+        # slows things a little, but looks more like 'ls'
+        for f in sorted(content, key=unicode.lower):
+            ff=os.path.join(d,f)
+            if ff not in not_wanted and f != 'lost+found':
+                if os.path.isdir(ff): 
+                    r.append('<li class="directory collapsed"><a href="#" rel="%s/">%s</a></li>' % (ff,f))
+                else:
+                    e=os.path.splitext(f)[1][1:] # get .ext and remove dot
+                    r.append('<li class="file ext_%s"><a href="#" rel="%s">%s</a></li>' % (e,ff,f))
+        r.append('</ul>')
+    except Exception,e:
+        r.append('Could not load directory: %s' % str(e))
+    r.append('</ul>')
+    return HttpResponse(''.join(r))
+
+## utility functions
+
+# delete table records requested by id from one of the input forms
+def delete_records(table, rlist):
+            
+    records = rlist.split(",")
+
+    for record in records:
+        if record != '':
+            q = table.objects.filter(id = record)
+            q.delete()
 

@@ -19,11 +19,11 @@
 <body onload="setdefaults();">
 
 <div id="header">
-  <img hspace="40" vspace="5" align="right" height="59" width="228" src="/site_media/images/lfc_code_janitor.jpg" alt="The Linux Foundation Code Janitor" title="The Linux Foundation" />
+  <img hspace="40" vspace="5" align="right" height="59" width="228" src="/site_media/images/lfc_code_janitor.jpg" alt="Code Janitor" title="Code Janitor" />
   <ul>
-    <li {% if tab_home %}id="current"{% endif %}><a href="/">Home<br />&nbsp;</a></li>
     <li {% if tab_scan %}id="current"{% endif %}><a href="/search/scan">Scan<br />&nbsp;</a></li>
     <li {% if tab_results %}id="current"{% endif %}><a href="/search/results">Results<br />&nbsp;</a></li>
+    <li {% if tab_keywords %}id="current"{% endif %}><a href="/search/keywords">Keywords<br />&nbsp;</a></li>
     <li><a href="/search/documentation">Documentation<br />&nbsp;</a></li>
   </ul>
 </div>
@@ -31,7 +31,7 @@
 <div id="lmargin">&nbsp;</div>
 <div id="main">
 {% block content %} {% endblock %}
-</div>
+</div> <!-- end of main -->
 <div id="rmargin"></div>
 
 </body>
