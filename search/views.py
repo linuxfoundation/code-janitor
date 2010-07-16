@@ -17,6 +17,9 @@ class SearchForm(forms.Form):
 class KeywordForm(forms.Form):
     wordlist = forms.CharField(widget=forms.Textarea)
 
+def index(request):
+    return HttpResponseRedirect("/search/scan/")
+
 def taskstatus(request):
     tm = task.TaskManager()
     return HttpResponse(tm.read_status())

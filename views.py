@@ -1,7 +1,7 @@
 # Views not associated with a Django app.  This is mostly for the toplevel
 # index page.
 
-from django.shortcuts import render_to_response
+from django.http import HttpResponsePermanentRedirect
 
 def toplevel(request):
-    return render_to_response("index.html", { "tab_home": True })
+    return HttpResponsePermanentRedirect("/search/")
