@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 import codecs
 from django.db import models, transaction
 
@@ -48,7 +49,8 @@ class Search(models.Model):
                     for line in file_obj:
                         line_unicode = line.decode('utf-8', 'ignore')
                         for keyword in keywords:
-                            if line_unicode.find(keyword.keyword) != -1:
+                            if re.search(re.escape(keyword.keyword), 
+                                         line_unicode, re.I):
                                 item = SearchItem(search=self,
                                                   file_path=file_path,
                                                   keyword_found=keyword.keyword,
