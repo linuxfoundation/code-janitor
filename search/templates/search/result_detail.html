@@ -44,7 +44,7 @@ may be suspect.</p>
 
 function setdefaults()
 {
-{% if search.completed %}
+{% if not task_running %}
   document.getElementById("result_page").style.visibility = 'visible';
   document.getElementById("job_status").innerHTML = "";
 {% else %}

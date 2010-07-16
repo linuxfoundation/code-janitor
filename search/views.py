@@ -50,6 +50,7 @@ def results(request, result_id=-1):
                                   { 'searches': results,
                                     'tab_results': True })
     else:
+        tm = task.TaskManager()
         result = Search.objects.get(id=result_id)
         searched = result.searchitem_set.filter(skipped=False)
         not_searched = result.searchitem_set.filter(skipped=True)
@@ -57,6 +58,7 @@ def results(request, result_id=-1):
                                   { 'search': result,
                                     'searched': searched,
                                     'not_searched': not_searched,
+                                    'task_running': tm.is_running(),
                                     'tab_results': True })
 
 def keywords(request):
