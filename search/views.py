@@ -40,7 +40,7 @@ def scan(request):
     # issue a note is no keywords defined
     keywordcount = Keyword.objects.count()
     if keywordcount == 0:
-        nokeywords = 'You should define keywords first on the <a href="search/keywords">Keywords</a> tab.'
+        nokeywords = 'You should define keywords first on the <a href="/search/keywords">Keywords</a> tab.'
 
     return render_to_response("search/scan.html", { "form": form,
                                                     "nokeywords": nokeywords,
