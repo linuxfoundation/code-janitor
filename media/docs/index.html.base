@@ -23,9 +23,9 @@
     </ul>
     <li><a href="#gui-use">Using the GUI</a></li>
     <ul>
-      <li><a href="#admin">Admin Interface</a></li>
       <li><a href="#Scan">Scan</a></li>
       <li><a href="#Results">Results</a></li>
+      <li><a href="#Results">Keywords</a></li>
     </ul>
   </ul>
   <ul>
@@ -39,6 +39,10 @@
 <div id="main">
 <div id="overview">
 <b>Overview</b>
+<p>The Code Janitor is a utility for finding "objectionable" content in source code trees 
+before releasing them to the public.  These can be things your developers wrote (like 
+profanity, insults, confessions, and so on), or things that indicate code that might be 
+inappropriate to use in the project (like copyright notices or license statements).</p>
 </div>
 
 <div id="setup">
@@ -46,10 +50,23 @@
 
 <div id="requirements">
 <b>System Requirements:</b>
+This is a web-based application, using Django as its framework.  You will need Django 1.0 or 
+later.  Django is provided in most recent Linux distributions, or you can get it from the
+<a href="http://www.djangoproject.com/">Django Project</a>.</p>
 </div>
 
 <div id="install">
 <b>Installation:</b><p></p>
+<p>Currently the project is only available from 
+<a href="http://git.linuxfoundation.org/?p=janitor.git;a=summary">git</a>. You can checkout
+the code with the commands:
+
+<pre>
+git clone http://git.linuxfoundation.org/janitor.git
+cd janitor
+make
+</pre>
+
 </div>
 
 <div id="layout">
@@ -58,23 +75,47 @@
 
 <div id="server">
 <b>Running the GUI server:</b>
+<p>You can start the GUI server with the following command:
+
+<pre>
+  ./code-janitor.py start
+</pre>
+
+This will start the server and point a Web browser at the Code Janitor main page.</p>
 </div>
 
 </div> <!-- end of Setup -->
 
 <div id="gui-use">
 <b>Using the GUI:</b>
-
-<div id="admin">
-<b>Admin interface:</b>
-</div>
+<p>The GUI is arranged with "tabs" for the major functional areas. First you must define keywords
+then you are ready to start a scan.</p>
 
 <div id="Scan">
 <b>Scan:</b>
+<p>The <tt>Scan</tt> tab is the home page of the system and where you initiate a test run. If there
+are no keywords defined you will be directed to go to the <tt>Keywords</tt> tab and add keywords.
+Once you have defined keywords you can either type in a file or directory path or select one using
+the path browser. If you have groups defined, you will also be presented with the option to only
+scan for certain groups of keywords. Once you press <tt>Start Scan</tt>, the display will change to
+show a status screen of the test and will redirect to the test results when complete.</p>
 </div>
 
 <div id="Results">
 <b>Results:</b>
+<p>The <tt>Results</tt> tab displays a running list of all the test results. Clicking on the link
+for a given result will display the test detail page.</p>
+</div>
+
+<div id="Keywords">
+<b>Keywords:</b>
+<p>The <tt>Keywords</tt> tab allows you to enter keywords to scan for. The large text entry area is where
+you add new keywords. Words all on one line are considered a phrase, and words entered on separate
+lines will be different keyword records. You can also delete keyword entries by selecting the 
+checkbox next to the entry and clicking on <tt>Delete Selected Keywords</tt>.</p>
+<p>You can also create groups (e.g. Language, Legal, Competition) that can be used to combine
+into groups if you want to only scan for a subset of keywords. Deleting a group will also remove
+keyword associations.</p>
 </div>
 
 </div> <!-- end of Using the GUI -->

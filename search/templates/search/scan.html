@@ -20,11 +20,14 @@
   <tr align="left">
     <th align="right">{{ form.path.label }}:</th>
     <td>{{ form.path }}</td>
-    <td><input type="button" value="Select Path" onclick="toggle_visibility('path_select')"/><td>
+    <td><input type="button" value="Select Path" onclick="toggle_visibility('path_select')"
+               {% if nokeywords %}disabled="true"{% endif %}/><td>
   </tr>
   <tr>
     <td></td>
-    <td><input type="submit" value="Start Scan" onclick="buildlist(this.form,'groupcheck','grouplist')"/></td>
+    <td><input type="submit" value="Start Scan" 
+               onclick="buildlist(this.form,'groupcheck','grouplist')"
+               {% if nokeywords %}disabled="true"{% endif %}/></td>
   </tr>
 </table>
 </div>

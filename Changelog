@@ -1,2 +1,8 @@
 0.0.1:
     Initial version.
+
+0.0.2:
+   Add keyword entry tab
+   Add keyword grouping capabilty
+   Allow scanning either files or directories and ignore inappropriate files
+
