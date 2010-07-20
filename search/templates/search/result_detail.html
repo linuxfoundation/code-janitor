@@ -25,7 +25,7 @@
 <p>Files found but not searched:</p>
 <ul>
 {% for item in not_searched %}
-  <li>{{ item.file_path }}</li>
+  <li>{{ item.file_path }}: {{ item.keyword_found }}</li>
 {% endfor %}
 </ul>
 {% endif %}

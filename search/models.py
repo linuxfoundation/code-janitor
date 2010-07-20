@@ -73,9 +73,9 @@ class Search(models.Model):
                                                   line_number=line_count)
                                 item.save()
                         line_count = line_count + 1
-                except IOError:
+                except IOError, e:
                     item = SearchItem(search=self, file_path=file_path,
-                                      skipped=True)
+                                      skipped=True, keyword_found=str(e))
                     item.save()
 
         self.completed = True
