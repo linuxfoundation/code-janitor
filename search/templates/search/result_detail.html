@@ -8,6 +8,7 @@
 <div id="result_page">
 
 <p>Detail for search done on {{ search.path }} at {{ search.start_time }}:</p>
+{% if search.group_list %}<p>Keyword groups checked: {% for g in grouplist %}{{ g.group }},{% endfor %}</p>{% endif %}
 
 {% if searched %}
 <ul>

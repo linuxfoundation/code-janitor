@@ -6,6 +6,7 @@
   <script type="text/javascript" src="/site_media/js/jquery-1.4.2.min.js"></script>
   <script type="text/javascript" src="/site_media/js/jqueryFileTree.js"></script>
   <script type="text/javascript" src="/site_media/js/visibility.js"></script>
+  <script type="text/javascript" src="/site_media/js/checklist.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -23,15 +24,40 @@
   </tr>
   <tr>
     <td></td>
-    <td><input type="submit" value="Start Scan" /></td>
+    <td><input type="submit" value="Start Scan" onclick="buildlist(this.form,'groupcheck','grouplist')"/></td>
   </tr>
 </table>
 </div>
 <div class="container" id="path_select" style="display: none;"> 
 	<div id="path" class="browser"></div> 
 </div>
-</form>
+
+<div class="container" id="group_select">
+{% if latest_group_list and not nokeywords %}
+  <table border="1" width="300" cellspacing="1" style='table-layout:fixed'>
+    <col width=25>
+    <col width=260>
+    <tr align="center">
+      <td colspan=2><b>Check For Keywords Only From Selected Groups</b><br>(default is all keywords)</th>
+    </tr>
+    <tr align="center">
+      <td><input type="checkbox" name="selectall" 
+                 onclick="toggleall(this.form,'groupcheck','selectall')" />
+      </td>
+      <th>Select/Deselect All</th>
+    </tr>
+
+    {% for g in latest_group_list %}
+    <tr>
+      <td align="center"><input type="checkbox" name="groupcheck" value="{{ g.id }}"/></td>
+      <td>{{ g.group }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endif %}
+  <input type="hidden", name="grouplist", value="" />
 </div>
+</form>
 
 <div class="cfooter">
 

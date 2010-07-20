@@ -3,6 +3,7 @@ import os, re, urllib
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django import forms
+from django.forms import ModelForm
 from django.http import HttpResponse, HttpResponseRedirect
 
 from janitor.site_settings import gui_name, gui_version
@@ -17,6 +18,16 @@ class SearchForm(forms.Form):
 class KeywordForm(forms.Form):
     wordlist = forms.CharField(widget=forms.Textarea)
 
+class GroupForm(ModelForm):
+    class Meta:
+        model = Group
+
+    groups = forms.ChoiceField()
+ 
+    def __init__(self, *args, **kwargs):
+        super(GroupForm, self).__init__(*args, **kwargs)
+        self.fields['groups'].choices = group_choices()
+
 def index(request):
     return HttpResponseRedirect("/search/scan/")
 
@@ -30,20 +41,26 @@ def scan(request):
         tm = task.TaskManager()
         form = SearchForm(request.POST)
         if form.is_valid() and not tm.is_running():
-            search = Search(top_path=form.cleaned_data["path"])
+            grouplist = request.POST.get('grouplist', '')
+            if grouplist:
+                grouplist=grouplist[:-1]
+            search = Search(top_path=form.cleaned_data["path"], group_list=grouplist)
             search.save()
             tm.start(search.do)
             return HttpResponseRedirect("/search/results/%d" % search.id)
     else:
         form = SearchForm()
 
-    # issue a note is no keywords defined
+    # issue a note if no keywords defined
     keywordcount = Keyword.objects.count()
     if keywordcount == 0:
         nokeywords = 'You should define keywords first on the <a href="/search/keywords">Keywords</a> tab.'
 
+    latest_group_list = Group.objects.all().order_by('group')
+
     return render_to_response("search/scan.html", { "form": form,
                                                     "nokeywords": nokeywords,
+                                                    "latest_group_list": latest_group_list,
                                                     "tab_scan": True })
 
 def results(request, result_id=-1):
@@ -53,32 +70,38 @@ def results(request, result_id=-1):
                                   { 'searches': results,
                                     'tab_results': True })
     else:
+        groups = ''
         tm = task.TaskManager()
         result = Search.objects.get(id=result_id)
+        if result.group_list != '':
+            groups = result.group_list.split(",")
+        grouplist = Group.objects.all().filter(id__in=groups)           
         searched = result.searchitem_set.filter(skipped=False)
         not_searched = result.searchitem_set.filter(skipped=True)
         return render_to_response("search/result_detail.html",
                                   { 'search': result,
+                                    'grouplist': grouplist,
                                     'searched': searched,
                                     'not_searched': not_searched,
                                     'task_running': tm.is_running(),
                                     'tab_results': True })
 
 def keywords(request):
-    errmsg = ''
-    errlist = []
+    kerrmsg = ''
+    kerrlist = []
+    gerrmsg = ''
+    gadderr = ''
     if request.method == "POST":
         mode = urllib.unquote(request.POST.get('submit'))
 
-        if re.search("^Add", mode):   
-            form = KeywordForm(request.POST) # A form bound to the POST data
+        if re.search("^Add", mode) and re.search("Keyword", mode):   
+            kform = KeywordForm(request.POST) # A form bound to the POST data
             # request to add data
-            if form.is_valid(): # All validation rules pass
-                wl = form.cleaned_data['wordlist']
+            if kform.is_valid(): # All validation rules pass
+                wl = kform.cleaned_data['wordlist']
                 words = wl.split("\n")
                 # remove dups
                 words = list(set(words))
-                print words
                 for word in words:
                     word = word.rstrip("\r")
                     # no empty strings
@@ -87,23 +110,69 @@ def keywords(request):
                         try:
                             kw.save()
                         except:
-                            errlist.append(str(word))
+                            kerrlist.append(str(word))
                 
-                if errlist:
-                    errmsg = "<b>Warning:</b> did not add duplicate keyword(s): " + str(errlist)
+                if kerrlist:
+                    kerrmsg = "<b>Warning:</b> did not add duplicate keyword(s): " + str(kerrlist)
                     
-        if re.search("^Delete", mode): 
+        if re.search("^Delete", mode) and re.search("Keyword", mode): 
             # delete request
             keywordlist = request.POST.get('keywordlist', '')
             if keywordlist != '':
                 delete_records(Keyword, keywordlist)
 
-    form = KeywordForm()
-    latest_keyword_list = Keyword.objects.all().order_by('keyword')
+        if re.search("^Add Selected", mode) and re.search("Group", mode):   
+            kform = KeywordForm(request.POST) # A form bound to the POST data
+            # request to add data
+            keywordlist = request.POST.get('keywordlist', '')
+            group = request.POST.get('groups', '')
+            if group != '':
+                for k in keywordlist.split(","):
+                    if k != '':
+                        galready = GroupedKeywords.objects.filter(keyword = k, group = group).count()
+                        if not galready:
+                            gadd = GroupedKeywords(keyword_id = k, group_id = group)
+                            gadd.save()
+                        else:
+                            gadderr = "<b>Warning:</b> Did not add duplicate group to keyword"          
 
-    return render_to_response("search/keywords.html", { "form": form,
-                                                    "errmsg": errmsg,
+        if re.search("^Add Group", mode):   
+            gform = GroupForm(request.POST) # A form bound to the POST data
+            # request to add data
+            gadd = request.POST.get('group', '')
+            if gadd:
+                g = Group(group = gadd)
+                try:
+                    g.save()
+                except:
+                    gerrmsg = "<b>Warning:</b> did not add duplicate group: " + gadd
+
+        if re.search("^Delete", mode) and re.search("Groups", mode): 
+            # delete request
+            grouplist = request.POST.get('grouplist', '')
+            if grouplist != '':
+                delete_records(Group, grouplist)
+
+    kform = KeywordForm()
+    gform = GroupForm()
+    latest_keyword_list = Keyword.objects.values('keyword', 'id')
+    for k in latest_keyword_list:
+        group_id_list = GroupedKeywords.objects.values('group_id').filter(keyword = k['id'])
+        groups = []
+        for g in group_id_list:
+            group_list = Group.objects.values('group').filter(id = g['group_id'])
+            for group in group_list:
+                groups.append(group['group'])
+        groups.sort()
+        k['groups'] = ",".join(groups)
+
+    latest_group_list = Group.objects.all().order_by('group')
+
+    return render_to_response("search/keywords.html", { "kform": kform, "gform": gform,
+                                                    "kerrmsg": kerrmsg, "gerrmsg": gerrmsg, 
+                                                    "gadderr": gadderr,
                                                     "latest_keyword_list": latest_keyword_list,
+                                                    "latest_group_list": latest_group_list,
                                                     "tab_keywords": True })
 
 def documentation(request):
@@ -180,4 +249,16 @@ def delete_records(table, rlist):
         if record != '':
             q = table.objects.filter(id = record)
             q.delete()
+
+def group_choices():
+    # get the available groups to populated the form drop-downs
+    groups = Group.objects.all().order_by('group')
+    # need a tuple for the drop-down
+    choices = []
+    # no default
+    choices.append(('',''))
+    for g in groups:
+        choices.append((g.id, g.group))
+
+    return choices
 

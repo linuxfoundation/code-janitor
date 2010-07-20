@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 {% block header %}
+  <style type="text/css">@import "/site_media/css/containers.css";</style>
   <script type="text/javascript" src="/site_media/js/checklist.js"></script>
 </head>
 {% endblock %}
 
 {% block content %}
 <br>
+
+<div class="container">
 <form name="keywordform" method="post" action="" enctype="multipart/form-data">
-  <table border="1" width="80%">
+  <table border="1" width="520" cellspacing="1" style='table-layout:fixed'>
+    <col width=25>
+    <col width=360>
+    <col width=100>
     <tr align="center">
       <td></td>
       <th>Keyword(s)</th>
@@ -16,36 +22,98 @@
     <tr align="center">
       <td></td>
       <td>
-        {% if errmsg %}{% autoescape off %}{{ errmsg }}{% endautoescape %}<br>{% endif %}
+        {% if kerrmsg %}{% autoescape off %}{{ kerrmsg }}{% endautoescape %}<br>{% endif %}
         For a phrase, enter all the words on the same line. Individual entries should be
         on seperate lines.<br>
-        {{ form.wordlist }}
+        {{ kform.wordlist }}
       </td>
-      <td><input type="submit" name="submit" value="Add Keyword(s)" /></td>
+      <td><input type="submit" name="submit" value="Add
+Keyword(s)" /></td>
     </tr>
-    <tr align="center">
-      <td><input type="checkbox" name="selectall" 
+    <tr>
+      <td align="center"><input type="checkbox" name="selectall" 
                  onclick="toggleall(this.form,'keywordcheck','selectall')" />
       </td>
-      <td colspan="2">
+      <td colspan=2 align="left">
         <input type="submit" name="submit" value="Delete Selected Keywords" 
                onclick="buildlist(this.form,'keywordcheck','keywordlist')" />
+        <br>
+        {% if gadderr %}{% autoescape off %}{{ gadderr }}{% endautoescape %}<br>{% endif %}
+        <input type="submit" name="submit" value="Add Selected Keywords To Group:" 
+               onclick="buildlist(this.form,'keywordcheck','keywordlist')" />
+        &nbsp;&nbsp;
+        {{ gform.groups }}
       </td>
     </tr>
-
+  </table>
+{% if not latest_keyword_list %}
+  <br>
+  <b>No keywords are available.</b>
+{% else %}
+  <table border="1" width="520" cellspacing="1" style='table-layout:fixed'>
+    <col width=25>
+    <col width=100>
+    <col width=360>
+    <tr align="center">
+      <td></td>
+      <th>Keyword</th>
+      <th>Groups</th>
+    </tr>
     {% for k in latest_keyword_list %}
     <tr>
       <td align="center"><input type="checkbox" name="keywordcheck" value="{{ k.id }}" /></td>
       <td>{{ k.keyword }}</td>
+      <td>{{ k.groups }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endif %}
+  <input type="hidden", name="keywordlist", value="" />
+</form>
+</div>
+
+<div class="container">
+<form name="groupform" method="post" action="" enctype="multipart/form-data">
+  <table border="1" width="400" cellspacing="1" style='table-layout:fixed'>
+    <col width=25>
+    <col width=260>
+    <col width=100>
+    <tr align="center">
+      <td></td>
+      <th>Groups</th>
+      <td></td>
+    </tr>
+    <tr align="center">
+      <td></td>
+      <td>
+        {% if gerrmsg %}{% autoescape off %}{{ gerrmsg }}{% endautoescape %}<br>{% endif %}
+        {{ gform.group }}
+      </td>
+      <td><input type="submit" name="submit" value="Add Group" /></td>
+    </tr>
+    <tr align="center">
+      <td><input type="checkbox" name="selectall" 
+                 onclick="toggleall(this.form,'groupcheck','selectall')" />
+      </td>
+      <td colspan="2">
+        <input type="submit" name="submit" value="Delete Selected Groups" 
+               onclick="buildlist(this.form,'groupcheck','grouplist')" />
+      </td>
+    </tr>
+
+    {% for g in latest_group_list %}
+    <tr>
+      <td align="center"><input type="checkbox" name="groupcheck" value="{{ g.id }}" /></td>
+      <td>{{ g.group }}</td>
       <td></td>
     </tr>
     {% endfor %}
   </table>
-  <input type="hidden", name="keywordlist", value="" />
-</form>
-{% if not latest_keyword_list %}
+{% if not latest_group_list %}
   <br>
-  <b>No keywords are available.</b>
+  <b>No groups are available.</b>
 {% endif %}
-
+  <input type="hidden", name="grouplist", value="" />
+</form>
+</div>
 {% endblock %}

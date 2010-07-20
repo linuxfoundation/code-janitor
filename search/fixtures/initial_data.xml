@@ -10,6 +10,16 @@
     <field type="CharField" name="app_label">auth</field>
     <field type="CharField" name="model">group</field>
   </object>
+  <object pk="10" model="contenttypes.contenttype">
+    <field type="CharField" name="name">group</field>
+    <field type="CharField" name="app_label">search</field>
+    <field type="CharField" name="model">group</field>
+  </object>
+  <object pk="11" model="contenttypes.contenttype">
+    <field type="CharField" name="name">grouped keywords</field>
+    <field type="CharField" name="app_label">search</field>
+    <field type="CharField" name="model">groupedkeywords</field>
+  </object>
   <object pk="9" model="contenttypes.contenttype">
     <field type="CharField" name="name">keyword</field>
     <field type="CharField" name="app_label">search</field>
@@ -30,12 +40,12 @@
     <field type="CharField" name="app_label">auth</field>
     <field type="CharField" name="model">permission</field>
   </object>
-  <object pk="10" model="contenttypes.contenttype">
+  <object pk="12" model="contenttypes.contenttype">
     <field type="CharField" name="name">search</field>
     <field type="CharField" name="app_label">search</field>
     <field type="CharField" name="model">search</field>
   </object>
-  <object pk="11" model="contenttypes.contenttype">
+  <object pk="13" model="contenttypes.contenttype">
     <field type="CharField" name="name">search item</field>
     <field type="CharField" name="app_label">search</field>
     <field type="CharField" name="model">searchitem</field>
@@ -149,6 +159,36 @@
     <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">5</field>
     <field type="CharField" name="codename">delete_contenttype</field>
   </object>
+  <object pk="28" model="auth.permission">
+    <field type="CharField" name="name">Can add group</field>
+    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">10</field>
+    <field type="CharField" name="codename">add_group</field>
+  </object>
+  <object pk="29" model="auth.permission">
+    <field type="CharField" name="name">Can change group</field>
+    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">10</field>
+    <field type="CharField" name="codename">change_group</field>
+  </object>
+  <object pk="30" model="auth.permission">
+    <field type="CharField" name="name">Can delete group</field>
+    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">10</field>
+    <field type="CharField" name="codename">delete_group</field>
+  </object>
+  <object pk="31" model="auth.permission">
+    <field type="CharField" name="name">Can add grouped keywords</field>
+    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">11</field>
+    <field type="CharField" name="codename">add_groupedkeywords</field>
+  </object>
+  <object pk="32" model="auth.permission">
+    <field type="CharField" name="name">Can change grouped keywords</field>
+    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">11</field>
+    <field type="CharField" name="codename">change_groupedkeywords</field>
+  </object>
+  <object pk="33" model="auth.permission">
+    <field type="CharField" name="name">Can delete grouped keywords</field>
+    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">11</field>
+    <field type="CharField" name="codename">delete_groupedkeywords</field>
+  </object>
   <object pk="25" model="auth.permission">
     <field type="CharField" name="name">Can add keyword</field>
     <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">9</field>
@@ -164,34 +204,34 @@
     <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">9</field>
     <field type="CharField" name="codename">delete_keyword</field>
   </object>
-  <object pk="28" model="auth.permission">
+  <object pk="34" model="auth.permission">
     <field type="CharField" name="name">Can add search</field>
-    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">10</field>
+    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">12</field>
     <field type="CharField" name="codename">add_search</field>
   </object>
-  <object pk="29" model="auth.permission">
+  <object pk="35" model="auth.permission">
     <field type="CharField" name="name">Can change search</field>
-    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">10</field>
+    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">12</field>
     <field type="CharField" name="codename">change_search</field>
   </object>
-  <object pk="30" model="auth.permission">
+  <object pk="36" model="auth.permission">
     <field type="CharField" name="name">Can delete search</field>
-    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">10</field>
+    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">12</field>
     <field type="CharField" name="codename">delete_search</field>
   </object>
-  <object pk="31" model="auth.permission">
+  <object pk="37" model="auth.permission">
     <field type="CharField" name="name">Can add search item</field>
-    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">11</field>
+    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">13</field>
     <field type="CharField" name="codename">add_searchitem</field>
   </object>
-  <object pk="32" model="auth.permission">
+  <object pk="38" model="auth.permission">
     <field type="CharField" name="name">Can change search item</field>
-    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">11</field>
+    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">13</field>
     <field type="CharField" name="codename">change_searchitem</field>
   </object>
-  <object pk="33" model="auth.permission">
+  <object pk="39" model="auth.permission">
     <field type="CharField" name="name">Can delete search item</field>
-    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">11</field>
+    <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">13</field>
     <field type="CharField" name="codename">delete_searchitem</field>
   </object>
   <object pk="16" model="auth.permission">
@@ -223,19 +263,5 @@
     <field type="CharField" name="name">Can delete site</field>
     <field to="contenttypes.contenttype" name="content_type" rel="ManyToOneRel">7</field>
     <field type="CharField" name="codename">delete_site</field>
-  </object>
-  <object pk="1" model="auth.user">
-    <field type="CharField" name="username">compliance</field>
-    <field type="CharField" name="first_name"/>
-    <field type="CharField" name="last_name"/>
-    <field type="CharField" name="email">compliance@example.org</field>
-    <field type="CharField" name="password">sha1$d04ea$02b4945fe3d3db00f392c4869f4ae72621c1b9f2</field>
-    <field type="BooleanField" name="is_staff">True</field>
-    <field type="BooleanField" name="is_active">True</field>
-    <field type="BooleanField" name="is_superuser">True</field>
-    <field type="DateTimeField" name="last_login">2010-07-08 00:00:23</field>
-    <field type="DateTimeField" name="date_joined">2010-07-08 00:00:23</field>
-    <field to="auth.group" name="groups" rel="ManyToManyRel"/>
-    <field to="auth.permission" name="user_permissions" rel="ManyToManyRel"/>
   </object>
 </django-objects>

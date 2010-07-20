@@ -10,9 +10,20 @@ class Keyword(models.Model):
     def __unicode__(self):
         return self.keyword
 
+class Group(models.Model):
+    group = models.CharField(max_length=80, unique=True)
+
+    def __unicode__(self):
+        return self.group
+
+class GroupedKeywords(models.Model):
+    keyword = models.ForeignKey(Keyword)
+    group = models.ForeignKey(Group)
+
 class Search(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     top_path = models.CharField(max_length=100)
+    group_list = models.CharField(max_length=100, blank=True)
     completed = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -30,7 +41,12 @@ class Search(models.Model):
         sys.stdout.write("JOBDESC: Scanning files for keywords.\n")
         sys.stdout.write("MESSAGE: Loading keywords...\n")
         sys.stdout.flush()
-        keywords = Keyword.objects.all()
+        if self.group_list == '':
+            keywords = Keyword.objects.all()
+        else:
+            groups = self.group_list.split(",")
+            key_ids = GroupedKeywords.objects.values('keyword_id').filter(group__in=groups)
+            keywords = Keyword.objects.all().filter(id__in=key_ids)
 
         if os.path.isdir(self.top_path):
             path_iterator = os.walk(self.top_path)
