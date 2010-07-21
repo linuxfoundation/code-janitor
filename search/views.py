@@ -65,6 +65,14 @@ def scan(request):
 
 def results(request, result_id=-1):
     if result_id < 0:
+        if request.method == "POST":
+            mode = urllib.unquote(request.POST.get('submit'))
+            if re.search("^Delete", mode): 
+                # delete request
+                searchlist = request.POST.get('searchlist', '')
+                if searchlist != '':
+                    delete_records(Search, searchlist)
+
         results = Search.objects.all()
         return render_to_response("search/result_list.html", 
                                   { 'searches': results,

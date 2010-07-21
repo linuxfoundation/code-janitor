@@ -1,11 +1,32 @@
 {% extends "base.html" %}
+{% block header %}
+<script type="text/javascript" src="/site_media/js/checklist.js"></script>
+</head>
+{% endblock %}
 
 {% block content %}
-
-<ul>
+<br>
+{% if searches %}
+<form name="resultsform" method="post" action="" enctype="multipart/form-data">   
+<table width = "100%" border="0">
+  <tr align="left">
+    <td align="center" width="25px"><input type="checkbox" name="selectall" 
+               onclick="toggleall(this.form,'searchcheck','selectall')" />
+    </td>
+    <td><input type="submit" name="submit" value="Delete Selected Searches"
+               onclick="buildlist(this.form,'searchcheck','searchlist')" />
+    </td>
+  </tr>
 {% for search in searches %}
-  <li><a href="{{ search.get_absolute_url }}">{{ search }}</a></li>
+  <tr valign="top">
+    <td align="center"><input type="checkbox" name="searchcheck" value="{{ search.id }}" /></td>
+    <td><a href="{{ search.get_absolute_url }}">{{ search }}</a></td>
+  </tr>
 {% endfor %}
-</ul>
-
+</table>
+<input type="hidden", name="searchlist", value="" />
+</form>
+{% else %}
+  <b>No search results available</b>
+{% endif %}
 {% endblock %}
