@@ -5,37 +5,65 @@
 <div id="job_status">
 </div>
 
+<div id="print">
 <div id="result_page">
-
-<p>Detail for search done on {{ search.path }} at {{ search.start_time }}:</p>
-{% if search.group_list %}<p>Keyword groups checked: {% for g in grouplist %}{{ g.group }},{% endfor %}</p>{% endif %}
+<br>
+<table width = "100%" border = "1">
+  <tr>
+    <td><b>Path Searched: </b>{{ search.top_path }}</td>
+    <td><b>Date: </b>{{ search.start_time|date:"M d, Y H:i:s" }}</td>
+    <td><b>Groups Checked: </b>{% if search.group_list %}{% for g in grouplist %}{{ g.group }},{% endfor %}{% else %}N/A{% endif %}</td>
+    <td align = "center" id = "noprint">
+      <input type="button" name="doprint" value="Print Results" onClick="javascript:window.print()">
+    </td>
+  </tr>
+</table> 
 
 {% if searched %}
-<ul>
+<br>
+<table width = "100%" border = "1">
+  <tr>
+    <th>File/Path</th>
+    <th>Line Number(s)</th> 
+    <th>Keyword(s) Found</th>
+  </tr>
 {% for item in searched %}
-  <li>{{ item.file_path }}, line {{ item.line_number }}: 
-      {{ item.keyword_found }}</li>
+  <tr valign="top">
+    <td>{{ item.file_path }}</td>
+    {% autoescape off %}
+    <td>{{ item.line_number }}</td> 
+    <td>{{ item.keyword_found }}</td>
+    {% endautoescape %}
+  </tr>
 {% endfor %}
-</ul>
+</table>
 {% else %}
-<p>No keywords defined at the time were found.</p>
+<p><b>No keywords defined at the time were found.</b></p>
 {% endif %}
 
 {% if not_searched %}
-<p>Files found but not searched:</p>
-<ul>
+<p><b>Files found but not searched:</b></p>
+<table width = "100%" border = "1">
+  <tr>
+    <th>File/Path</th>
+    <th>Reason Skipped</th>
+  </tr>
 {% for item in not_searched %}
-  <li>{{ item.file_path }}: {{ item.keyword_found }}</li>
+  <tr>
+    <td>{{ item.file_path }}</td>
+    <td>{{ item.keyword_found }}</td>
+  </tr>
 {% endfor %}
-</ul>
+</table>
 {% endif %}
 
 {% if not search.completed %}
-<p>This job did not complete for some reason.  Any results listed above
-may be suspect.</p>
+<p><b>This job did not complete for some reason.  Any results listed above
+may be suspect.</b></p>
 {% endif %}
 
-</div>
+</div> <!-- result_page -->
+</div> <!-- print -->
 
 {% endblock %}
 

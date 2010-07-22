@@ -73,7 +73,7 @@ def results(request, result_id=-1):
                 if searchlist != '':
                     delete_records(Search, searchlist)
 
-        results = Search.objects.all()
+        results = Search.objects.all().order_by('-start_time')
         return render_to_response("search/result_list.html", 
                                   { 'searches': results,
                                     'tab_results': True })
@@ -85,11 +85,19 @@ def results(request, result_id=-1):
             groups = result.group_list.split(",")
         grouplist = Group.objects.all().filter(id__in=groups)           
         searched = result.searchitem_set.filter(skipped=False)
+        searched_list = render_detail(searched, result.top_path)
         not_searched = result.searchitem_set.filter(skipped=True)
+        # FIXME still picking up some embedded "u'..'" here, clean it up
+        # we want to strip out the top_path anyway
+        for s in not_searched:
+            s.keyword_found = s.keyword_found.replace("u'", "")
+            s.keyword_found = s.keyword_found[:-1]
+            s.file_path = s.file_path.replace(result.top_path + "/", "")
+            s.keyword_found = s.keyword_found.replace(result.top_path + "/", "")
         return render_to_response("search/result_detail.html",
                                   { 'search': result,
                                     'grouplist': grouplist,
-                                    'searched': searched,
+                                    'searched': searched_list,
                                     'not_searched': not_searched,
                                     'task_running': tm.is_running(),
                                     'tab_results': True })
@@ -269,4 +277,24 @@ def group_choices():
         choices.append((g.id, g.group))
 
     return choices
+
+def render_detail(searchset, top_path):
+    # we want to present things without repeating duplicate data, this is hard to do
+    # in an html table, even with the template language, plus slow for large datasets
+    searchlist = []
+    lastfile = ''
+    brk = "<br>"
+    for s in searchset:
+        if s.file_path != lastfile:
+            if lastfile != '':
+                searchlist.append({'file_path': lastfile.replace(top_path + "/",""), 'line_number': linenumbers, 
+                                 'keyword_found': keywords})
+            linenumbers = str(s.line_number)
+            keywords = s.keyword_found
+            lastfile = s.file_path
+        else:
+            linenumbers += brk + str(s.line_number)
+            keywords += brk + s.keyword_found            
+    
+    return searchlist
 
