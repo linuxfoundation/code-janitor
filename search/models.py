@@ -54,29 +54,40 @@ class Search(models.Model):
             path_iterator = [(os.path.dirname(self.top_path), [], 
                               [os.path.basename(self.top_path)])]
 
+        sys.stdout.write("MESSAGE: Generating file list...\n")
+        sys.stdout.flush()
+
+        file_list = []
         for (dir, subdirs, files) in path_iterator:
             for f in files:
-                file_path = os.path.join(dir, f)
-                try:
-                    sys.stdout.write("ITEM: " + file_path + "\n")
-                    sys.stdout.flush()
-                    file_obj = open(file_path)
-                    line_count = 1
-                    for line in file_obj:
-                        line_unicode = line.decode('utf-8', 'ignore')
-                        for keyword in keywords:
-                            if re.search(re.escape(keyword.keyword), 
-                                         line_unicode, re.I):
-                                item = SearchItem(search=self,
-                                                  file_path=file_path,
-                                                  keyword_found=keyword.keyword,
-                                                  line_number=line_count)
-                                item.save()
-                        line_count = line_count + 1
-                except IOError, e:
-                    item = SearchItem(search=self, file_path=file_path,
-                                      skipped=True, keyword_found=str(e))
-                    item.save()
+                file_list.append([dir, f])
+
+        sys.stdout.write("MESSAGE: Searching files...\n")
+        sys.stdout.write("COUNT: %d\n" % len(file_list))
+        sys.stdout.flush()
+
+        for (dir, f) in file_list:
+            file_path = os.path.join(dir, f)
+            try:
+                sys.stdout.write("ITEM: " + file_path + "\n")
+                sys.stdout.flush()
+                file_obj = open(file_path)
+                line_count = 1
+                for line in file_obj:
+                    line_unicode = line.decode('utf-8', 'ignore')
+                    for keyword in keywords:
+                        if re.search(re.escape(keyword.keyword), 
+                                     line_unicode, re.I):
+                            item = SearchItem(search=self,
+                                              file_path=file_path,
+                                              keyword_found=keyword.keyword,
+                                              line_number=line_count)
+                            item.save()
+                    line_count = line_count + 1
+            except IOError, e:
+                item = SearchItem(search=self, file_path=file_path,
+                                  skipped=True, keyword_found=str(e))
+                item.save()
 
         self.completed = True
         self.save()
