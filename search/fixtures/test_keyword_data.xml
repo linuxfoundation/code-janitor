@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<django-objects version="1.0">
+  <object pk="1" model="search.keyword">
+    <field type="CharField" name="keyword">python</field>
+  </object>
+  <object pk="2" model="search.keyword">
+    <field type="CharField" name="keyword">foo</field>
+  </object>
+  <object pk="3" model="search.keyword">
+    <field type="CharField" name="keyword">shucks</field>
+  </object>
+  <object pk="4" model="search.keyword">
+    <field type="CharField" name="keyword">baz</field>
+  </object>
+  <object pk="5" model="search.keyword">
+    <field type="CharField" name="keyword">django</field>
+  </object>
+  <object pk="6" model="search.keyword">
+    <field type="CharField" name="keyword">gosh</field>
+  </object>
+  <object pk="7" model="search.keyword">
+    <field type="CharField" name="keyword">darn</field>
+  </object>
+  <object pk="8" model="search.keyword">
+    <field type="CharField" name="keyword">bar</field>
+  </object>
+  <object pk="9" model="search.keyword">
+    <field type="CharField" name="keyword">wiggle</field>
+  </object>
+  <object pk="10" model="search.keyword">
+    <field type="CharField" name="keyword">apple</field>
+  </object>
+  <object pk="1" model="search.group">
+    <field type="CharField" name="group">Meaningless</field>
+  </object>
+  <object pk="2" model="search.group">
+    <field type="CharField" name="group">Python-related</field>
+  </object>
+  <object pk="3" model="search.group">
+    <field type="CharField" name="group">Expletives</field>
+  </object>
+  <object pk="1" model="search.groupedkeywords">
+    <field to="search.keyword" name="keyword" rel="ManyToOneRel">2</field>
+    <field to="search.group" name="group" rel="ManyToOneRel">1</field>
+  </object>
+  <object pk="2" model="search.groupedkeywords">
+    <field to="search.keyword" name="keyword" rel="ManyToOneRel">4</field>
+    <field to="search.group" name="group" rel="ManyToOneRel">1</field>
+  </object>
+  <object pk="3" model="search.groupedkeywords">
+    <field to="search.keyword" name="keyword" rel="ManyToOneRel">8</field>
+    <field to="search.group" name="group" rel="ManyToOneRel">1</field>
+  </object>
+  <object pk="4" model="search.groupedkeywords">
+    <field to="search.keyword" name="keyword" rel="ManyToOneRel">1</field>
+    <field to="search.group" name="group" rel="ManyToOneRel">2</field>
+  </object>
+  <object pk="5" model="search.groupedkeywords">
+    <field to="search.keyword" name="keyword" rel="ManyToOneRel">5</field>
+    <field to="search.group" name="group" rel="ManyToOneRel">2</field>
+  </object>
+  <object pk="6" model="search.groupedkeywords">
+    <field to="search.keyword" name="keyword" rel="ManyToOneRel">3</field>
+    <field to="search.group" name="group" rel="ManyToOneRel">3</field>
+  </object>
+  <object pk="7" model="search.groupedkeywords">
+    <field to="search.keyword" name="keyword" rel="ManyToOneRel">6</field>
+    <field to="search.group" name="group" rel="ManyToOneRel">3</field>
+  </object>
+  <object pk="8" model="search.groupedkeywords">
+    <field to="search.keyword" name="keyword" rel="ManyToOneRel">7</field>
+    <field to="search.group" name="group" rel="ManyToOneRel">3</field>
+  </object>
+</django-objects>

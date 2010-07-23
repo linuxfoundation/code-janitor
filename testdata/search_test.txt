@@ -1,0 +1,3 @@
+Darn that Django framework!  Besides being written
+in Python, it's hard to read, what with all that
+"foo" stuff.  I think I even saw a "bar"!  Shucks!
