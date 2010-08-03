@@ -81,12 +81,12 @@ fi
 
 %post
 if [ -x /usr/bin/xdg-desktop-menu ];then
-  xdg-desktop-menu install /opt/linuxfoundation/share/applications/dep-checker.desktop
+  xdg-desktop-menu install /opt/linuxfoundation/share/applications/code-janitor.desktop
 fi
 
 %preun
 if [ -x /usr/bin/xdg-desktop-menu ];then
-  xdg-desktop-menu uninstall /opt/linuxfoundation/share/applications/dep-checker.desktop
+  xdg-desktop-menu uninstall /opt/linuxfoundation/share/applications/code-janitor.desktop
 fi
 
 %postun
