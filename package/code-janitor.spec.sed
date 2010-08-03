@@ -39,21 +39,18 @@ make
 
 rm -rf ${RPM_BUILD_ROOT}
 install -d ${RPM_BUILD_ROOT}%{basedir}
-install -d ${RPM_BUILD_ROOT}%{basedir}/janitor
-cp -a *.py %{RPM_BUILD_ROOT}%{basedir}/janitor
 install -d ${RPM_BUILD_ROOT}%{basedir}/bin
-mv %{RPM_BUILD_ROOT}%{basedir}/janitor/code-janitor.py ${RPM_BUILD_ROOT}%{basedir}/bin
-cp -ar search ${RPM_BUILD_ROOT}%{basedir}/janitor
+install -m 755 code-janitor.py ${RPM_BUILD_ROOT}%{basedir}/bin
+cp -ar janitor ${RPM_BUILD_ROOT}%{basedir}
 find ${RPM_BUILD_ROOT}%{basedir} -name '*.pyc' | xargs rm -f
 rm -f ${RPM_BUILD_ROOT}%{basedir}/janitor/media/docs/*
-install -m 644 media/docs/*.html ${RPM_BUILD_ROOT}%{basedir}/janitor/media/docs
-install -d ${RPM_BUILD_ROOT}%{basedir}/share/icons/hicolor/16x16/apps
-install -m 644 desktop/lf_small.png ${RPM_BUILD_ROOT}%{basedir}/share/icons/hicolor/16x16/apps
-install -d ${RPM_BUILD_ROOT}%{basedir}/share/applications
-install -m 644 desktop/%{name}.desktop ${RPM_BUILD_ROOT}%{basedir}/share/applications
+#install -d ${RPM_BUILD_ROOT}%{basedir}/share/icons/hicolor/16x16/apps
+#install -m 644 desktop/lf_small.png ${RPM_BUILD_ROOT}%{basedir}/share/icons/hicolor/16x16/apps
+#install -d ${RPM_BUILD_ROOT}%{basedir}/share/applications
+#install -m 644 desktop/%{name}.desktop ${RPM_BUILD_ROOT}%{basedir}/share/applications
 install -d ${RPM_BUILD_ROOT}%{basedir}/doc/%{name}
 install -m 644 doc/License doc/Contributing ${RPM_BUILD_ROOT}%{basedir}/doc/%{name}
-install -m 644 AUTHORS Changelog README.txt README.apache-mod_wsgi ${RPM_BUILD_ROOT}%{basedir}/doc/%{name}
+install -m 644 AUTHORS Changelog README.txt ${RPM_BUILD_ROOT}%{basedir}/doc/%{name}
 install -d ${RPM_BUILD_ROOT}/var%{basedir}/log/compliance
 
 #==================================================
@@ -81,15 +78,15 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-%post
-if [ -x /usr/bin/xdg-desktop-menu ];then
-  xdg-desktop-menu install /opt/linuxfoundation/share/applications/dep-checker.desktop
-fi
+#%post
+#if [ -x /usr/bin/xdg-desktop-menu ];then
+#  xdg-desktop-menu install /opt/linuxfoundation/share/applications/dep-checker.desktop
+#fi
 
-%preun
-if [ -x /usr/bin/xdg-desktop-menu ];then
-  xdg-desktop-menu uninstall /opt/linuxfoundation/share/applications/dep-checker.desktop
-fi
+#%preun
+#if [ -x /usr/bin/xdg-desktop-menu ];then
+#  xdg-desktop-menu uninstall /opt/linuxfoundation/share/applications/dep-checker.desktop
+#fi
 
 %postun
 # don't mess with things on an upgrade
@@ -123,15 +120,15 @@ fi
 
 %dir %{basedir}/bin
 %dir %{basedir}/doc/%{name}
-%dir %{basedir}/compliance
-%dir %{basedir}/share/applications
-%dir %{basedir}/share/icons/hicolor/16x16/apps
+%dir %{basedir}/janitor
+#%dir %{basedir}/share/applications
+#%dir %{basedir}/share/icons/hicolor/16x16/apps
 %dir /var/%{basedir}/log/compliance
 
 %{basedir}/bin/*
-%{basedir}/compliance/*
-%{basedir}/share/icons/hicolor/16x16/apps/*
-%{basedir}/share/applications/*
+%{basedir}/janitor/*
+#%{basedir}/share/icons/hicolor/16x16/apps/*
+#%{basedir}/share/applications/*
 %doc %{basedir}/doc/%{name}/*
 
 %changelog

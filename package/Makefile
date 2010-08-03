@@ -1,7 +1,7 @@
 PACKAGE=code-janitor
 # version defined in site_settings.py
-VERSION=$(shell grep gui_version ../site_settings.py | awk '{print $$3}' | sed 's|"||g')
-RELEASE=3
+VERSION=$(shell grep gui_version ../janitor/site_settings.py | awk '{print $$3}' | sed 's|"||g')
+RELEASE=1
 
 # Derive date string for daily snapshots
 ISO_DATE=$(shell date +"%Y%m%d")
