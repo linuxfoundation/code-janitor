@@ -44,6 +44,7 @@ install -m 755 code-janitor.py ${RPM_BUILD_ROOT}%{basedir}/bin
 cp -ar janitor ${RPM_BUILD_ROOT}%{basedir}
 find ${RPM_BUILD_ROOT}%{basedir} -name '*.pyc' | xargs rm -f
 rm -f ${RPM_BUILD_ROOT}%{basedir}/janitor/media/docs/*
+install -m 644 janitor/media/docs/*.html ${RPM_BUILD_ROOT}%{basedir}/janitor/media/docs
 #install -d ${RPM_BUILD_ROOT}%{basedir}/share/icons/hicolor/16x16/apps
 #install -m 644 desktop/lf_small.png ${RPM_BUILD_ROOT}%{basedir}/share/icons/hicolor/16x16/apps
 #install -d ${RPM_BUILD_ROOT}%{basedir}/share/applications

@@ -207,7 +207,7 @@ def documentation(request):
             if status == 0:
                 status = os.system("cd " + settings.STATIC_DOC_ROOT + "/docs && cat index.html.base index.html.addons index.html.footer > index.html")
             else:
-                docs = "<b>Error, no index.html in compliance/media/docs.</b><br>"
+                docs = "<b>Error, no index.html in janitor/media/docs.</b><br>"
                 docs += "If working with a git checkout or tarball, please type 'make' in the top level directory."
 
     # something worked above
