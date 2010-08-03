@@ -29,7 +29,9 @@ command_line_options = [
 
 def get_base_path():
     this_module_path = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(os.path.dirname(this_module_path), "janitor")
+    if os.path.basename(this_module_path) == "bin":
+        this_module_path = os.path.dirname(this_module_path)
+    return os.path.join(this_module_path, "janitor")
 
 def set_import_path():
     sys.path.append(get_base_path())
