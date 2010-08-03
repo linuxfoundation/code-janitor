@@ -10,11 +10,12 @@
 <form name="resultsform" method="post" action="" enctype="multipart/form-data">   
 <table width = "100%" border="0">
   <tr align="left">
-    <td align="center" width="25px"><input type="checkbox" name="selectall" 
-               onclick="toggleall(this.form,'searchcheck','selectall')" />
+    <td align="center" width="25px"><input type="checkbox" name="selectall"
+                title="Select/Deselect All Searches" 
+                onclick="toggleall(this.form,'searchcheck','selectall')" />
     </td>
     <td><input type="submit" name="submit" value="Delete Selected Searches"
-               onclick="buildlist(this.form,'searchcheck','searchlist')" />
+                onclick="buildlist(this.form,'searchcheck','searchlist')" />
     </td>
   </tr>
 {% for search in searches %}

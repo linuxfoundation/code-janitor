@@ -21,7 +21,8 @@
     <th align="right">{{ form.path.label }}:</th>
     <td>{{ form.path }}</td>
     <td><input type="button" value="Select Path" onclick="toggle_visibility('path_select')"
-               {% if nokeywords %}disabled="true"{% endif %}/><td>
+                title="Open a File/Directory Selector"
+                {% if nokeywords %}disabled="true"{% endif %}/><td>
   </tr>
   <tr>
     <td></td>
