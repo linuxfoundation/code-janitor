@@ -3,6 +3,9 @@
 
 default: janitor/media/docs/index.html janitor/janitor.sqlite README.txt
 
+package:
+	cd package && $(MAKE)
+
 janitor/media/docs/index.html: janitor/media/docs/index.html.base \
   janitor/media/docs/index.html.addons janitor/media/docs/index.html.footer
 	cd janitor/media/docs && \
@@ -23,8 +26,9 @@ README.txt: janitor/media/docs/index.html
 	w3m -dump $< > $@
 
 clean:
+	cd package && $(MAKE) clean
 	cd janitor/media/docs && rm -f index.html index.html.addons
 	rm -f janitor/janitor.sqlite
 	rm -f README.txt
 
-.PHONY: clean fixture_regen
+.PHONY: package clean fixture_regen
