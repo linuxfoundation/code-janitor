@@ -67,6 +67,16 @@ cd janitor
 make
 </pre>
 
+If you don't have root permissions on the machine to install Django, you can install it in-place 
+with the dep-checker install:
+
+<pre>
+tar -xf Django-x.x.x.tar-gz
+cp -ar Django-x.x.x/django janitor/janitor
+cd janitor
+ln -s janitor/django .
+</pre>
+
 </div>
 
 <div id="layout">
