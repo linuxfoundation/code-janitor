@@ -51,7 +51,7 @@ rm -f ${RPM_BUILD_ROOT}%{basedir}/janitor/media/docs/*
 install -d ${RPM_BUILD_ROOT}%{basedir}/doc/%{name}
 install -m 644 doc/License doc/Contributing ${RPM_BUILD_ROOT}%{basedir}/doc/%{name}
 install -m 644 AUTHORS Changelog README.txt ${RPM_BUILD_ROOT}%{basedir}/doc/%{name}
-install -d ${RPM_BUILD_ROOT}/var%{basedir}/log/compliance
+install -d ${RPM_BUILD_ROOT}/var%{basedir}/log/janitor
 
 #==================================================
 %clean
@@ -123,7 +123,7 @@ fi
 %dir %{basedir}/janitor
 #%dir %{basedir}/share/applications
 #%dir %{basedir}/share/icons/hicolor/16x16/apps
-%dir /var/%{basedir}/log/compliance
+%dir /var/%{basedir}/log/janitor
 
 %{basedir}/bin/*
 %{basedir}/janitor/*
