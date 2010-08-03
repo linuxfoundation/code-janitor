@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Code Janitor Tool
+GenericName=Code Janitor
+Comment=Search source code for undesireable keywords
+Exec=/opt/linuxfoundation/bin/code-janitor.py start
+Icon=/opt/linuxfoundation/share/icons/hicolor/16x16/apps/lf_cj_small.png
+Terminal=false
+TryExec=/opt/linuxfoundation/bin/code-janitor.py
+Type=Application
+MimeType=
+Categories=Development

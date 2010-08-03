@@ -45,10 +45,10 @@ cp -ar janitor ${RPM_BUILD_ROOT}%{basedir}
 find ${RPM_BUILD_ROOT}%{basedir} -name '*.pyc' | xargs rm -f
 rm -f ${RPM_BUILD_ROOT}%{basedir}/janitor/media/docs/*
 install -m 644 janitor/media/docs/*.html ${RPM_BUILD_ROOT}%{basedir}/janitor/media/docs
-#install -d ${RPM_BUILD_ROOT}%{basedir}/share/icons/hicolor/16x16/apps
-#install -m 644 desktop/lf_small.png ${RPM_BUILD_ROOT}%{basedir}/share/icons/hicolor/16x16/apps
-#install -d ${RPM_BUILD_ROOT}%{basedir}/share/applications
-#install -m 644 desktop/%{name}.desktop ${RPM_BUILD_ROOT}%{basedir}/share/applications
+install -d ${RPM_BUILD_ROOT}%{basedir}/share/icons/hicolor/16x16/apps
+install -m 644 desktop/lf_cj_small.png ${RPM_BUILD_ROOT}%{basedir}/share/icons/hicolor/16x16/apps
+install -d ${RPM_BUILD_ROOT}%{basedir}/share/applications
+install -m 644 desktop/%{name}.desktop ${RPM_BUILD_ROOT}%{basedir}/share/applications
 install -d ${RPM_BUILD_ROOT}%{basedir}/doc/%{name}
 install -m 644 doc/License doc/Contributing ${RPM_BUILD_ROOT}%{basedir}/doc/%{name}
 install -m 644 AUTHORS Changelog README.txt ${RPM_BUILD_ROOT}%{basedir}/doc/%{name}
@@ -79,15 +79,15 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-#%post
-#if [ -x /usr/bin/xdg-desktop-menu ];then
-#  xdg-desktop-menu install /opt/linuxfoundation/share/applications/dep-checker.desktop
-#fi
+%post
+if [ -x /usr/bin/xdg-desktop-menu ];then
+  xdg-desktop-menu install /opt/linuxfoundation/share/applications/dep-checker.desktop
+fi
 
-#%preun
-#if [ -x /usr/bin/xdg-desktop-menu ];then
-#  xdg-desktop-menu uninstall /opt/linuxfoundation/share/applications/dep-checker.desktop
-#fi
+%preun
+if [ -x /usr/bin/xdg-desktop-menu ];then
+  xdg-desktop-menu uninstall /opt/linuxfoundation/share/applications/dep-checker.desktop
+fi
 
 %postun
 # don't mess with things on an upgrade
@@ -122,14 +122,14 @@ fi
 %dir %{basedir}/bin
 %dir %{basedir}/doc/%{name}
 %dir %{basedir}/janitor
-#%dir %{basedir}/share/applications
-#%dir %{basedir}/share/icons/hicolor/16x16/apps
+%dir %{basedir}/share/applications
+%dir %{basedir}/share/icons/hicolor/16x16/apps
 %dir /var/%{basedir}/log/janitor
 
 %{basedir}/bin/*
 %{basedir}/janitor/*
-#%{basedir}/share/icons/hicolor/16x16/apps/*
-#%{basedir}/share/applications/*
+%{basedir}/share/icons/hicolor/16x16/apps/*
+%{basedir}/share/applications/*
 %doc %{basedir}/doc/%{name}/*
 
 %changelog
