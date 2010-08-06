@@ -14,6 +14,22 @@ def get_project_root():
     # Shouldn't get here unless we can't find the path.
     raise RuntimeError, "could not find the project path"
 
+# Return the proper directory to use for userdir mode.
+
+def get_userdir():
+    return os.path.join(os.environ["HOME"], ".code-janitor")
+
+# Should we use userdir mode?
+
+def use_userdir():
+    if os.getuid() == 0 or os.environ["LOGNAME"] == "compliance":
+        return False
+    project_root = get_project_root()
+    if os.access(os.path.join(project_root, "janitor"), os.W_OK):
+        return False
+
+    return True
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -55,6 +71,16 @@ USE_I18N = True
 
 # Project root.
 PROJECT_ROOT = get_project_root()
+
+# Writable file setup; use different settings for userdir or normal mode.
+if use_userdir():
+    USERDIR_ROOT = get_userdir()
+    DATABASE_NAME = os.path.join(USERDIR_ROOT, 'janitor.sqlite')
+    STATE_ROOT = USERDIR_ROOT
+else:
+    USERDIR_ROOT = ''
+    DATABASE_NAME = os.path.join(PROJECT_ROOT, 'janitor', 'janitor.sqlite')
+    STATE_ROOT = os.path.join(PROJECT_ROOT, 'janitor')
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"

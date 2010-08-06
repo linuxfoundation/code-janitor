@@ -11,6 +11,7 @@ import pwd
 import time
 import signal
 import optparse
+import shutil
 
 from django.core.management import execute_manager
 
@@ -37,6 +38,9 @@ def set_import_path():
     sys.path.append(get_base_path())
     sys.path.append(os.path.join(get_base_path(), ".."))
 
+set_import_path()
+import settings
+
 def check_current_user():
     if os.getuid() == 0:
         try:
@@ -47,15 +51,24 @@ def check_current_user():
 
         os.setuid(compliance_user.pw_uid)
 
+# Setting up userdir mode.
+
+def setup_userdir():
+    if not os.path.exists(settings.USERDIR_ROOT):
+        os.mkdir(settings.USERDIR_ROOT)
+        shutil.copyfile(os.path.join(settings.PROJECT_ROOT, 
+                                     "janitor", "janitor.sqlite"),
+                        os.path.join(settings.USERDIR_ROOT, "janitor.sqlite"))
+
 def start(run_browser, interface=None):
+    if settings.USERDIR_ROOT:
+        setup_userdir()
+
     childpid = os.fork()
     if childpid == 0:
         os.setsid()
 
-        set_import_path()
-        import settings
-
-        log_fn = os.path.join(get_base_path(), "server.log")
+        log_fn = os.path.join(settings.STATE_ROOT, "server.log")
         try:
             log_fd = os.open(log_fn, os.O_WRONLY | os.O_APPEND | os.O_CREAT)
         except OSError:
@@ -74,7 +87,7 @@ def start(run_browser, interface=None):
 
         execute_manager(settings, manager_args)
     else:
-        pid_path = os.path.join(get_base_path(), "server.pid")
+        pid_path = os.path.join(settings.STATE_ROOT, "server.pid")
         pid_file = open(pid_path, "w")
         pid_file.write(str(childpid))
         pid_file.close()
@@ -96,7 +109,7 @@ def start(run_browser, interface=None):
             sys.exit(0)
 
 def stop():
-    pid_path = os.path.join(get_base_path(), "server.pid")
+    pid_path = os.path.join(settings.STATE_ROOT, "server.pid")
     if os.path.exists(pid_path):
         server_pid = int(open(pid_path).read())
         sys.stdout.write("Killing process %d...\n" % server_pid)
