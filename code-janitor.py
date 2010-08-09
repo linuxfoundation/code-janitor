@@ -60,7 +60,22 @@ def setup_userdir():
                                      "janitor", "janitor.sqlite"),
                         os.path.join(settings.USERDIR_ROOT, "janitor.sqlite"))
 
-def start(run_browser, interface=None):
+def start_server(run_browser, interface=None):
+    pid_path = os.path.join(settings.STATE_ROOT, "server.pid")
+    if os.path.exists(pid_path):
+        server_pid = int(open(pid_path).read())
+        pid_found = False
+        try:
+            os.kill(server_pid, 0)
+            pid_found = True
+        except OSError:
+            pid_found = False
+        if pid_found:
+            sys.stderr.write("The server is already running.\n")
+            sys.exit(1)
+        else:
+            os.unlink(pid_path)
+
     if settings.USERDIR_ROOT:
         setup_userdir()
 
@@ -87,7 +102,8 @@ def start(run_browser, interface=None):
 
         execute_manager(settings, manager_args)
     else:
-        pid_path = os.path.join(settings.STATE_ROOT, "server.pid")
+        time.sleep(1)
+
         pid_file = open(pid_path, "w")
         pid_file.write(str(childpid))
         pid_file.close()
@@ -108,13 +124,19 @@ def start(run_browser, interface=None):
         else:
             sys.exit(0)
 
-def stop():
+def stop_server():
     pid_path = os.path.join(settings.STATE_ROOT, "server.pid")
     if os.path.exists(pid_path):
         server_pid = int(open(pid_path).read())
         sys.stdout.write("Killing process %d...\n" % server_pid)
-        os.kill(server_pid, signal.SIGTERM)
-        os.unlink(pid_path)
+        try:
+            try:
+                os.kill(server_pid, signal.SIGTERM)
+            finally:
+                os.unlink(pid_path)
+        except OSError, e:
+            sys.stderr.write("Could not kill process: %s\n" % str(e))
+            sys.exit(1)
     else:
         sys.stderr.write("No server process found to stop.\n")
         sys.exit(1)
@@ -131,9 +153,9 @@ def main():
     if args[0] == "start":
         if not options.force_root:
             check_current_user()
-        start(not options.server_only, options.interface)
+        start_server(not options.server_only, options.interface)
     else:
-        stop()
+        stop_server()
 
 if __name__ == "__main__":
     main()
