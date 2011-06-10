@@ -1,7 +1,7 @@
 PACKAGE=code-janitor
 # version defined in site_settings.py
 VERSION=$(shell grep gui_version ../janitor/site_settings.py | awk '{print $$3}' | sed 's|"||g')
-RELEASE=2
+RELEASE=1
 
 # we can optionally bundle django
 DJANGO_VERSION=1.2.1

@@ -96,7 +96,7 @@ def start_server(run_browser, interface=None):
 
         os.close(0)
 
-        manager_args = ["janitor", "runserver"]
+        manager_args = ["janitor", "runserver", "--noreload"]
         if interface:
             manager_args.append(interface)
 
