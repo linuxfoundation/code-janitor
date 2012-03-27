@@ -14,6 +14,7 @@
     <td><b>Path Searched: </b>{{ search.top_path }}</td>
     <td><b>Date: </b>{{ search.start_time|date:"M d, Y H:i:s" }}</td>
     <td><b>Groups Checked: </b>{% if search.group_list %}{% for g in grouplist %}{{ g.group }},{% endfor %}{% else %}N/A{% endif %}</td>
+    <td><b>Reverse Search: </b>{{ search.reverse_search }}</td>
     <td align = "center" id = "noprint">
       <input type="button" name="doprint" value="Print Results" onClick="javascript:window.print()">
     </td>
@@ -25,21 +26,21 @@
 <table width = "100%" border = "1">
   <tr>
     <th>File/Path</th>
-    <th>Line Number(s)</th> 
-    <th>Keyword(s) Found</th>
+    {% if not search.reverse_search %}<th>Line Number(s)</th>{% endif %}
+    <th>Keyword(s) {% if search.reverse_search %}Not {% endif %}Found</th>
   </tr>
 {% for item in searched %}
   <tr valign="top">
     <td>{{ item.file_path }}</td>
     {% autoescape off %}
-    <td>{{ item.line_number }}</td> 
+    {% if not search.reverse_search %}<td>{{ item.line_number }}</td>{% endif %} 
     <td>{{ item.keyword_found }}</td>
     {% endautoescape %}
   </tr>
 {% endfor %}
 </table>
 {% else %}
-<p><b>No keywords defined at the time were found.</b></p>
+<p><b>No keywords defined at the time were {% if search.reverse_search %}missing{% else %}found{% endif %}.</b></p>
 {% endif %}
 
 {% if not_searched %}

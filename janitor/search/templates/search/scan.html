@@ -30,6 +30,10 @@
                onclick="buildlist(this.form,'groupcheck','grouplist')"
                {% if nokeywords %}disabled="true"{% endif %}/></td>
   </tr>
+  <tr>
+    <td><input type="checkbox" name="reverse_search" value="{{ reverse_search }}"</td>
+    <th colspan="2">Reverse search (for files without keywords)</th> 
+  </tr>
 </table>
 </div>
 <div class="container" id="path_select" style="display: none;"> 
@@ -58,6 +62,9 @@
     </tr>
     {% endfor %}
   </table>
+{% endif %}
+{% if not latest_group_list and not nokeywords %}
+  <b>No groups defined, scanning for all keywords.</b>
 {% endif %}
   <input type="hidden", name="grouplist", value="" />
 </div>

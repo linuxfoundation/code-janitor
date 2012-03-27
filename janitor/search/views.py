@@ -37,14 +37,16 @@ def taskstatus(request):
 
 def scan(request):
     nokeywords = ''
+    reverse_search = False
     if request.method == "POST":
         tm = task.TaskManager()
         form = SearchForm(request.POST)
         if form.is_valid() and not tm.is_running():
             grouplist = request.POST.get('grouplist', '')
+            reverse_search = request.POST.get('reverse_search', '')
             if grouplist:
                 grouplist=grouplist[:-1]
-            search = Search(top_path=form.cleaned_data["path"], group_list=grouplist)
+            search = Search(top_path=form.cleaned_data["path"], group_list=grouplist, reverse_search=reverse_search)
             search.save()
             tm.start(search.do)
             return HttpResponseRedirect("/search/results/%d" % search.id)
@@ -61,6 +63,7 @@ def scan(request):
     return render_to_response("search/scan.html", { "form": form,
                                                     "nokeywords": nokeywords,
                                                     "latest_group_list": latest_group_list,
+                                                    "reverse_search": reverse_search,
                                                     "tab_scan": True })
 
 def results(request, result_id=-1):
@@ -83,7 +86,7 @@ def results(request, result_id=-1):
         result = Search.objects.get(id=result_id)
         if result.group_list != '':
             groups = result.group_list.split(",")
-        grouplist = Group.objects.all().filter(id__in=groups)           
+        grouplist = Group.objects.all().filter(id__in=groups)
         searched = result.searchitem_set.filter(skipped=False)
         searched_list = render_detail(searched, result.top_path)
         not_searched = result.searchitem_set.filter(skipped=True)
@@ -288,13 +291,19 @@ def render_detail(searchset, top_path):
         if s.file_path != lastfile:
             if lastfile != '':
                 searchlist.append({'file_path': lastfile.replace(top_path + "/",""), 'line_number': linenumbers, 
-                                 'keyword_found': keywords})
+                                   'keyword_found': keywords})
+               
             linenumbers = str(s.line_number)
             keywords = s.keyword_found
             lastfile = s.file_path
         else:
             linenumbers += brk + str(s.line_number)
-            keywords += brk + s.keyword_found            
+            keywords += brk + s.keyword_found
     
+    # we've appended the previous file in the loop, still one left
+    if searchset.count():
+        searchlist.append({'file_path': s.file_path.replace(top_path + "/",""), 'line_number': str(s.line_number), 
+                           'keyword_found': s.keyword_found})
+
     return searchlist
 
