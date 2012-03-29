@@ -8,6 +8,18 @@ body {
   voice-family: "\"}\""; voice-family:inherit;
   font-size:small;
   } html>body {font-size:small;}
+.yellow {
+  background: yellow;
+  }
+.green {
+  color: green;
+  }
+.red {
+  color: red;
+  }
+.orange {
+  color: orange;
+  }
 }
 @media screen {
 #header {

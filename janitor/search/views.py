@@ -43,10 +43,9 @@ def scan(request):
         form = SearchForm(request.POST)
         if form.is_valid() and not tm.is_running():
             grouplist = request.POST.get('grouplist', '')
-            reverse_search = request.POST.get('reverse_search', '')
             if grouplist:
                 grouplist=grouplist[:-1]
-            search = Search(top_path=form.cleaned_data["path"], group_list=grouplist, reverse_search=reverse_search)
+            search = Search(top_path=form.cleaned_data["path"], group_list=grouplist)
             search.save()
             tm.start(search.do)
             return HttpResponseRedirect("/search/results/%d" % search.id)
@@ -140,6 +139,12 @@ def keywords(request):
             if keywordlist != '':
                 delete_records(Keyword, keywordlist)
 
+        if re.search("^Update", mode) and re.search("Keyword", mode): 
+            # reverse toggle request
+            keyreverselist = request.POST.get('keyreverselist', '')
+            if keyreverselist != '':
+                update_reverse(Keyword, keyreverselist)
+
         if re.search("^Add Selected", mode) and re.search("Group", mode):   
             kform = KeywordForm(request.POST) # A form bound to the POST data
             # request to add data
@@ -174,7 +179,7 @@ def keywords(request):
 
     kform = KeywordForm()
     gform = GroupForm()
-    latest_keyword_list = Keyword.objects.values('keyword', 'id')
+    latest_keyword_list = Keyword.objects.values('keyword', 'id', 'reverse_search')
     for k in latest_keyword_list:
         group_id_list = GroupedKeywords.objects.values('group_id').filter(keyword = k['id'])
         groups = []
@@ -269,6 +274,16 @@ def delete_records(table, rlist):
             q = table.objects.filter(id = record)
             q.delete()
 
+# set/reset the reverse search boolean
+def update_reverse(table, rlist):
+            
+    records = rlist.split(",")
+
+    for record in records:
+        if record != '':
+            rid, rvalue = record.split(":")
+            table.objects.filter(id = rid).update(reverse_search = int(rvalue))
+
 def group_choices():
     # get the available groups to populated the form drop-downs
     groups = Group.objects.all().order_by('group')
@@ -290,20 +305,20 @@ def render_detail(searchset, top_path):
     for s in searchset:
         if s.file_path != lastfile:
             if lastfile != '':
-                searchlist.append({'file_path': lastfile.replace(top_path + "/",""), 'line_number': linenumbers, 
-                                   'keyword_found': keywords})
-               
-            linenumbers = str(s.line_number)
-            keywords = s.keyword_found
+                searchlist.append({'file_path': lastfile.replace(top_path + "/",""), 'keyword_found': keywords})
+            keywords = ''
             lastfile = s.file_path
         else:
-            linenumbers += brk + str(s.line_number)
-            keywords += brk + s.keyword_found
+            keywords += brk
+
+        if s.line_number == 0:
+            keywords += 'Not found: "' + s.keyword_found + '"'
+        else:
+            keywords += 'Found: "' + s.keyword_found + '" on line ' + str(s.line_number)
     
     # we've appended the previous file in the loop, still one left
     if searchset.count():
-        searchlist.append({'file_path': s.file_path.replace(top_path + "/",""), 'line_number': str(s.line_number), 
-                           'keyword_found': s.keyword_found})
+        searchlist.append({'file_path': s.file_path.replace(top_path + "/",""), 'keyword_found': keywords})
 
     return searchlist
 

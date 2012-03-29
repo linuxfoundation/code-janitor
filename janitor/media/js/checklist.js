@@ -37,3 +37,41 @@ function buildlist(f,icheck,ilist) {
     document.forms[f.name].elements[ilist].value = llist;
 }
 
+function buildpairedlist(f,icheck,ilist) {
+    chk = document.forms[f.name].elements[icheck];
+    llist = '';
+    if (typeof chk.length == 'undefined') {
+            if (chk.checked == true) {
+               llist = chk.value + ":1";
+            } else {
+               llist = chk.value + ":0";
+            }
+    } else {
+        for (i = 0; i < chk.length; i++) {
+            if (chk[i].checked == true) {
+               llist = llist + chk[i].value + ":1,";
+            } else {
+               llist = llist + chk[i].value + ":0,";
+            }
+        }
+    }
+    document.forms[f.name].elements[ilist].value = llist;
+}
+
+function buildradiolist(f,icheck,ilist) {
+    chk = document.forms[f.name].getElementsByClassName(icheck);
+    llist = '';
+    if (typeof chk.length == 'undefined') {
+        if (chk.checked == true) {
+            llist = chk.value;
+        }
+    } else {
+        for (i = 0; i < chk.length; i++) {
+            if (chk[i].checked == true) {
+               llist = llist + chk[i].value + ",";
+            }
+        }
+    }
+    document.forms[f.name].elements[ilist].value = llist;
+}
+

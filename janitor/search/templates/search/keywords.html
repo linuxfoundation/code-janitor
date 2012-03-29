@@ -15,13 +15,10 @@
     <col width=360>
     <col width=100>
     <tr align="center">
-      <td></td>
-      <th>Keyword(s)</th>
-      <td></td>
+      <th colspan="3">Keyword(s)</th>
     </tr>
     <tr align="center">
-      <td></td>
-      <td>
+      <td colspan="2">
         {% if kerrmsg %}{% autoescape off %}{{ kerrmsg }}{% endautoescape %}<br>{% endif %}
         For a phrase, enter all the words on the same line. Individual entries should be
         on separate lines.<br>
@@ -36,13 +33,14 @@
       </td>
       <td colspan=2 align="left">
         <input type="submit" name="submit" value="Delete Selected Keywords" 
-               onclick="buildlist(this.form,'keywordcheck','keywordlist')" />
-        <br>
-        {% if gadderr %}{% autoescape off %}{{ gadderr }}{% endautoescape %}<br>{% endif %}
+               onclick="buildlist(this.form,'keywordcheck','keywordlist')" /><br>
         <input type="submit" name="submit" value="Add Selected Keywords To Group:" 
                onclick="buildlist(this.form,'keywordcheck','keywordlist')" />
-        &nbsp;&nbsp;
         {{ gform.groups }}
+        {% if gadderr %}{% autoescape off %}{{ gadderr }}{% endautoescape %}<br>{% endif %}
+        <br>
+        <input type="submit" name="submit" value="Update Keyword Detection Status" 
+               onclick="buildradiolist(this.form,'keyreversecheck','keyreverselist')" />
       </td>
     </tr>
   </table>
@@ -53,22 +51,29 @@
   <table border="1" width="500" cellspacing="1" style='table-layout:fixed'>
     <col width=25>
     <col width=100>
-    <col width=360>
+    <col width=150>
+    <col width=210>
     <tr align="center">
       <td></td>
       <th>Keyword</th>
+      <th>Detect</th>
       <th>Groups</th>
     </tr>
     {% for k in latest_keyword_list %}
     <tr>
       <td align="center"><input type="checkbox" name="keywordcheck" value="{{ k.id }}" /></td>
       <td>{{ k.keyword }}</td>
+      <td>
+        <input type="radio" class="keyreversecheck" name="keyreversecheck{{ k.id }}" value="{{ k.id }}:0" {% if not k.reverse_search %}checked="checked"{% endif %}">Presence
+        <input type="radio" class="keyreversecheck" name="keyreversecheck{{ k.id }}" value="{{ k.id }}:1" {% if k.reverse_search %}checked="checked"{% endif %}>Absence
+      </td>
       <td>{{ k.groups }}</td>
     </tr>
     {% endfor %}
   </table>
 {% endif %}
   <input type="hidden", name="keywordlist", value="" />
+  <input type="hidden", name="keyreverselist", value="" />
 </form>
 </div>
 
@@ -79,13 +84,10 @@
     <col width=260>
     <col width=100>
     <tr align="center">
-      <td></td>
-      <th>Groups</th>
-      <td></td>
+      <th colspan="3">Groups</th>
     </tr>
     <tr align="center">
-      <td></td>
-      <td>
+      <td colspan="2">
         {% if gerrmsg %}{% autoescape off %}{{ gerrmsg }}{% endautoescape %}<br>{% endif %}
         {{ gform.group }}
       </td>
@@ -105,8 +107,7 @@
     {% for g in latest_group_list %}
     <tr>
       <td align="center"><input type="checkbox" name="groupcheck" value="{{ g.id }}" /></td>
-      <td>{{ g.group }}</td>
-      <td></td>
+      <td colspan="2">{{ g.group }}</td>
     </tr>
     {% endfor %}
   </table>

@@ -6,6 +6,7 @@ from django.db import models, transaction
 
 class Keyword(models.Model):
     keyword = models.CharField(max_length=80, unique=True)
+    reverse_search = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.keyword
@@ -24,7 +25,6 @@ class Search(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     top_path = models.CharField(max_length=100)
     group_list = models.CharField(max_length=100, blank=True)
-    reverse_search = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -76,17 +76,16 @@ class Search(models.Model):
                 file_obj = open(file_path)
                 line_count = 1
 
-                if self.reverse_search:
-                    # We start assuming the word has not been found 
-                    for keyword in keywords:
-                        reverse_found[file_path + "_" + keyword.keyword] = False
+                # We start assuming the word has not been found 
+                for keyword in keywords:
+                    reverse_found[file_path + "_" + keyword.keyword] = False
 
                 for line in file_obj:
                     line_unicode = line.decode('utf-8', 'ignore')
                     for keyword in keywords:                        
                         if re.search(re.escape(keyword.keyword), 
                                      line_unicode, re.I):
-                            if self.reverse_search:
+                            if keyword.reverse_search:
                                 reverse_found[file_path + "_" + keyword.keyword] = True
                             else:
                                 item = SearchItem(search=self,
@@ -96,15 +95,16 @@ class Search(models.Model):
                                 item.save()
                     line_count = line_count + 1
 
-                if self.reverse_search:
-                    # If it's still not found after processing the whole file, log it
-                    for keyword in keywords:
+                # If it's still not found after processing the whole file, log it
+                for keyword in keywords:
+                    if keyword.reverse_search:
                         if reverse_found[file_path + "_" + keyword.keyword] == False:
                             item = SearchItem(search=self,
                                               file_path=file_path,
                                               keyword_found=keyword.keyword,
                                               line_number=0)
                             item.save()
+
             except IOError, e:
                 item = SearchItem(search=self, file_path=file_path,
                                   skipped=True, keyword_found=str(e))
@@ -118,4 +118,5 @@ class SearchItem(models.Model):
     file_path = models.CharField(max_length=100)
     skipped = models.BooleanField(default=False)
     keyword_found = models.CharField(max_length=80)
+    # line number of zero here indicates it was a reverse search
     line_number = models.IntegerField(default=0)
