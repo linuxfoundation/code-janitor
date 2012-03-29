@@ -43,7 +43,7 @@ def scan(request):
         form = SearchForm(request.POST)
         if form.is_valid() and not tm.is_running():
             grouplist = request.POST.get('grouplist', '')
-            if grouplist:
+            if len(grouplist) > 1:
                 grouplist=grouplist[:-1]
             search = Search(top_path=form.cleaned_data["path"], group_list=grouplist)
             search.save()
