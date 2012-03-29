@@ -26,7 +26,9 @@ function buildlist(f,icheck,ilist) {
     chk = document.forms[f.name].elements[icheck];
     llist = '';
     if (typeof chk.length == 'undefined') {
-        llist = chk.value;
+        if (chk.checked == true) {
+            llist = chk.value;
+        }
     } else {
         for (i = 0; i < chk.length; i++) {
             if (chk[i].checked == true) {

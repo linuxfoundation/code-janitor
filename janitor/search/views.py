@@ -37,6 +37,7 @@ def taskstatus(request):
 
 def scan(request):
     nokeywords = ''
+    grouplist = ''
     reverse_search = False
     if request.method == "POST":
         tm = task.TaskManager()
