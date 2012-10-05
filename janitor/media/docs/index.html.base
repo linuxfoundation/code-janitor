@@ -57,7 +57,7 @@ later.  Django is provided in most recent Linux distributions, or you can get it
 
 <div id="install">
 <b>Installation:</b><p></p>
-<p>Currently the project is only available from 
+<p>The project is available from 
 <a href="http://git.linuxfoundation.org/?p=janitor.git;a=summary">git</a>. You can checkout
 the code with the commands:
 
@@ -67,6 +67,8 @@ cd janitor
 make
 </pre>
 
+There are also rpm packages in <a href="ftp://ftp.linuxfoundation.org/pub/compliance/released">ftp</a>.
+<br /><br />
 If you don't have root permissions on the machine to install Django, you can install it in-place 
 with the dep-checker install:
 
@@ -75,6 +77,13 @@ tar -xf Django-x.x.x.tar-gz
 cp -ar Django-x.x.x/django janitor/janitor
 cd janitor
 ln -s janitor/django .
+</pre>
+
+If you intend to run the application as root, you should setup the <tt>compliance</tt> user account:
+
+<pre>
+groupadd compliance
+useradd -d /home/compliance -s /bin/sh -p "" -c "compliance tester login" compliance -m -g compliance
 </pre>
 
 </div>
