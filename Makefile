@@ -19,8 +19,8 @@ janitor/janitor.sqlite: janitor/search/models.py
 	cd janitor && python manage.py syncdb --noinput
 
 fixture_regen:
-	(cd janitor && python manage.py dumpdata --format xml) | \
-	  xmllint --format - > search/fixtures/initial_data.xml
+	(cd janitor && python manage.py dumpdata --format xml search) | \
+	  xmllint --format - > janitor/search/fixtures/initial_data.xml
 
 README.txt: janitor/media/docs/index.html
 	w3m -dump $< > $@
