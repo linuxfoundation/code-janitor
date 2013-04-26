@@ -46,7 +46,7 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'sqlite3',
+        'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(get_project_root(), 'janitor', 'janitor.sqlite'),
     }
 }
