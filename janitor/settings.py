@@ -44,13 +44,12 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = os.path.join(get_project_root(), 'janitor', 'janitor.sqlite')
-                               # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASES = {
+    'default': {
+        'ENGINE': 'sqlite3',
+        'NAME': os.path.join(get_project_root(), 'janitor', 'janitor.sqlite'),
+    }
+}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -75,11 +74,12 @@ PROJECT_ROOT = get_project_root()
 # Writable file setup; use different settings for userdir or normal mode.
 if use_userdir():
     USERDIR_ROOT = get_userdir()
-    DATABASE_NAME = os.path.join(USERDIR_ROOT, 'janitor.sqlite')
+    DATABASES['default']['NAME'] = os.path.join(USERDIR_ROOT, 'janitor.sqlite')
     STATE_ROOT = USERDIR_ROOT
 else:
     USERDIR_ROOT = ''
-    DATABASE_NAME = os.path.join(PROJECT_ROOT, 'janitor', 'janitor.sqlite')
+    DATABASES['default']['NAME'] = os.path.join(PROJECT_ROOT, 'janitor',
+                                                'janitor.sqlite')
     STATE_ROOT = os.path.join(PROJECT_ROOT, 'janitor')
 
 # Absolute path to the directory that holds media.

@@ -1,7 +1,7 @@
 Code Janitor
 ============
 
-Copyright 2010 Linux Foundation.  For the copyright license, see
+Copyright 2010-2013 Linux Foundation.  For the copyright license, see
 doc/License.
 
 What is the Code Janitor?
@@ -17,7 +17,7 @@ Getting Started
 ---------------
 
 This is a web-based application, using Django as its framework.  You
-will need Django 1.0 or later.  Django is provided in most recent
+will need Django 1.2 or later.  Django is provided in most recent
 Linux distributions, or you can get it from
 http://www.djangoproject.com/.
 
